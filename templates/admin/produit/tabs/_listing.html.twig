@@ -1,0 +1,55 @@
+<div class="tab-pane" id="listings" role="tabpanel" aria-labelledby="messages-tab">
+
+    <br/><br/>
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom</th>
+            <th>Requis</th>
+            <th>Multiple</th>
+            <th>Etendu</th>
+            <th>Valeurs</th>
+            <th>Actions</th>
+        </tr>
+        {% for produitListing in produit.produitListingsAttributs %}
+            <tr>
+                <td>
+                    {{ produitListing.listingAttributs.nom }}
+                </td>
+                <td>
+                    {% if produitListing.required %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if produitListing.multiple %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if produitListing.expand %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ produitListing.listingAttributs.attributs | join(' | ') }}
+                </td>
+                <td>
+                    <a href="{{ path('acecommerce_admin_produitlisting_edit', {'id':produitListing.id}) }}"
+                       title="Editer"><i class="far fa-edit"></i></a> |
+
+                    <button type="button" href="#!" title="Détacher du produit" class="far fa-trash-alt"
+                            data-toggle="modal"
+                            data-produitnom="{{ produitListing.listingAttributs.nom }}"
+                            data-cmdproduitid="{{ produitListing.listingAttributs.id }}"
+                            data-target="#removeListingModal">
+                    </button>
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucun</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>

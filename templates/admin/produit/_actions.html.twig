@@ -1,0 +1,23 @@
+<a href="{{ path('acecommerce_admin_commerce_show', {'id': produit.commerce.id}) }}" class="btn btn-primary"
+   role="button"><i
+            class="fas fa-list"></i>
+    Retour au commerce</a>
+
+<a href="{{ path('acecommerce_admin_produit_edit', { 'id': produit.id }) }}" class="btn btn-primary"
+   role="button"><i
+            class="far fa-edit"></i> Editer</a>
+
+<a href="{{ path('produit_images_edit', { 'id': produit.id }) }}" class="btn btn-primary"
+   role="button"><i
+            class="far fa-images"></i> Images</a>
+
+<a href="#!" role="button" class="btn btn-primary" data-toggle="modal" data-target="#attributModal">
+    <i class="fas fa-link"></i> Lier un listing d'attributs
+</a>
+
+<a href="{{ path('acecommerce_produit_show', { 'id': produit.id }) }}" class="btn btn-primary"
+   role="button" target="_blank"><i
+            class="fas fa-eye"></i> Voir sur le site</a>
+
+<br/>
+<br/>

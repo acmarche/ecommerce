@@ -1,0 +1,39 @@
+<h3 class="text-success">
+   Du {{ commande.createdAt | date('d-m-Y') }}
+</h3>
+
+<table class='table table-bordered'>
+    <tr>
+        <th>
+            Pour:
+        </th>
+        <td>
+            {{ commande.user }}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <span class="glyphicon glyphicon-calendar"></span> Commandé le:
+        </th>
+        <td>
+            {{ commande.createdAt | date('d-m-Y') }}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <span class="glyphicon glyphicon-calendar"></span> Payé:
+        </th>
+        <td>
+            {% if commande.paye %}
+                <span class="glyphicon glyphicon-ok"></span>
+            {% else %}
+                Non
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+{% include 'admin/commande/_produits.html.twig' with {'commandeProduits': commande.commandeProduits, 'couts': couts} %}
+{% include 'admin/commande/_paiement_details.html.twig' with {'commande': commande, 'couts': couts} %}
+
+<div class="page-breaker"></div>

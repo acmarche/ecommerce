@@ -1,0 +1,11 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header pb-2">
+        <h3>Liste des commandes non livrées</h3>
+    </div>
+
+    {% include 'admin/commande/_index_line.html.twig' with {'commandes':commandes} %}
+
+{% endblock %}

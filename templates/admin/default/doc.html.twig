@@ -1,0 +1,47 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+    <div class="page-header">
+        <h3>Documentation</h3>
+    </div>
+
+    {% include 'admin/default/etapes.html.twig' %}
+
+    <hr/>
+    <h4>Fonctionnalités</h4>
+
+    <p>Le commerçant :</p>
+
+    <ul class="list-group">
+        <li class="list-group-item">Gérer ses produits</li>
+        <li class="list-group-item">Gérer sa liste d'ingrédients</li>
+        <li class="list-group-item">Gérer sa liste des attributs</li>
+        <li class="list-group-item">Associer les produits à ces deux derniers</li>
+        <li class="list-group-item">Gérer ses commandes payées</li>
+    </ul>
+
+    <p>Le logisticien :</p>
+
+    <ul class="list-group">
+        <li class="list-group-item">Consulter tous les commerces</li>
+        <li class="list-group-item">Consulter les commandes payées</li>
+        <li class="list-group-item">Action de finaliser les commandes</li>
+        <li class="list-group-item">Consulter les commandes archivées</li>
+    </ul>
+
+    <p>L'admin :</p>
+
+    <ul class="list-group">
+        <li class="list-group-item">Ajouter/modifier tous les commerces</li>
+        <li class="list-group-item">Ajouter/modifier tous les produits</li>
+        <li class="list-group-item">Ajouter/modifier tous les ingrédients</li>
+        <li class="list-group-item">Ajouter/modifier tous les suppléments</li>
+        <li class="list-group-item">Consulter toutes les commandes</li>
+    </ul>
+
+    <p>L'utilisateur :</p>
+
+    <ul class="list-group">
+        <li class="list-group-item">N'a rien à faire ici ;-)</li>
+    </ul>
+{% endblock %}

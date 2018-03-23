@@ -1,0 +1,22 @@
+{% extends "bootstrap_4_layout.html.twig" %}
+
+{% block form_label %}
+    {{ parent() }}
+    {% if required %}
+        <i class="fas fa-asterisk fa-xs fa-spin" title="Ce champ est requis"></i>
+    {% endif %}
+{% endblock %}
+
+{# http://ajaxray.com/blog/symfony-forms-twitter-bootstrap-3-help-block/ #}
+{% block form_help -%}
+    {% for attrname, attrvalue in attr %}
+        {% if attrname == 'data-help' %}
+            <small class="form-text text-muted">{{ attrvalue|trans }}</small>
+        {% endif %}
+    {% endfor %}
+{%- endblock form_help %}
+
+{% block form_errors -%}
+    {{ parent() }}
+    {{- block('form_help') -}}
+{%- endblock form_errors %}

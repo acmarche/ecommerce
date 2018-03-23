@@ -1,0 +1,12 @@
+<table class="table">
+    <tr>
+        <td>{% include 'facture/_commerce.html.twig' with {'commerce': commerce, 'fiche':fiche} %}</td>
+        <td>{% include 'facture/_client.html.twig' with {'user':user} %}</td>
+    </tr>
+</table>
+
+<hr/>
+<hr/>
+<h1>Facture {{ commande }}</h1>
+
+{% include 'facture/_line.html.twig' with {'commande': commande} %}

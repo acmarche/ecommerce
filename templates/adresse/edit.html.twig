@@ -1,0 +1,17 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Edition{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">
+            {{ adresse }}
+        </h2>
+    </div>
+
+    {% include 'utilisateur/_aside.html.twig' %}
+    {% include 'adresse/_form.html.twig' %}
+    {% include 'utilisateur/_aside_end.html.twig' %}
+
+{% endblock %}

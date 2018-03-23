@@ -1,0 +1,73 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Produit <strong>{{ produit }}</strong></h3>
+    </div>
+
+    {% include 'admin/produit/_actions.html.twig' %}
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        {% include 'admin/produit/tabs/_tabs.html.twig' %}
+        {% include 'admin/produit/tabs/_base.html.twig' %}
+        {% include 'admin/produit/tabs/_livraison.html.twig' %}
+        {% include 'admin/produit/tabs/_images.html.twig' %}
+        {% if produit.isFood %}
+            {#% include 'admin/produit/tabs/_supplements.html.twig' %#}
+            {% include 'admin/produit/tabs/_ingredients.html.twig' %}
+        {% endif %}
+        {% include 'admin/produit/tabs/_listing.html.twig' %}
+    </div>
+
+    {% include 'admin/produit/_liaison_modal.html.twig' %}
+
+    {% include '/admin/produit/_modal_remove_listing.html.twig' %}
+
+    {% include 'admin/produit/_delete.html.twig' %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $('#removeListingModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var nom = button.data('produitnom'); // Extract info from data-* attributes
+            var cmdid = button.data('cmdproduitid'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            console.log(modal.find('modal-body-nom').value);
+            modal.find('#modal-body-nom').text(nom);
+            modal.find('#modal-body-input').val(cmdid)
+        })
+    </script>
+    <script>
+        function update(input) {
+            // Attach a submit handler to the form
+            //  $(":input").bind('focusout', (function (event) {
+
+            // Stop form from submitting normally
+            //  event.preventDefault();
+
+            // Get some values from elements on the page:
+            // var $input = $(this);
+            var
+                term = input.data('id'),
+                quantite = input.val(),
+                url = '{{ path('acecommerce_panier_update') }}';
+            console.log(quantite);
+            // Send the data using post
+            var posting = $.post(url, {idCommandeProduit: term, quantiteProduit: quantite});
+
+            // Put the results in a div
+            posting.done(function (data) {
+
+                var content = data.data.html;
+                $("#detailpanier").empty().append(content);
+            });
+            //}            ))
+        }
+    </script>
+{% endblock %}

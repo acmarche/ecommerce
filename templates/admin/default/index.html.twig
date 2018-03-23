@@ -1,0 +1,20 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+    <div class="page-header">
+        <h3>Gestion des commandes de l'ecommerce</h3>
+    </div>
+
+    {% if not is_granted('ROLE_ECOMMERCE_ADMIN') and is_granted('ROLE_ECOMMERCE_COMMERCE') %}
+        {% include 'admin/default/dashboard_commerce.html.twig' %}
+    {% endif %}
+
+    {% if not is_granted('ROLE_ECOMMERCE_ADMIN') and is_granted('ROLE_ECOMMERCE_LOGISTICIEN') %}
+        {% include 'admin/default/dashboard_logisticien.html.twig' %}
+    {% endif %}
+
+
+<a href="{{ path('acecommerce_home')}}" class="btn btn-primary float-right"
+   role="button"><i
+            class="fas fa-arrow-left"></i> Retourner sur le site</a>
+{% endblock %}

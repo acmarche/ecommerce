@@ -1,0 +1,20 @@
+<!-- Modal -->
+<div class="modal fade" id="removeListingModal" tabindex="-1" role="dialog"
+     aria-labelledby="removeListingModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                Ne plus lier <strong><span id="modal-body-nom"></span></strong> au produit ?
+            </div>
+            <div class="modal-footer">
+                {{ form_start(form_liaison_remove) }}
+                {{ form_errors(form_liaison_remove) }}
+                <input type="hidden" id="modal-body-input" name="produitListingAttribut"/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-danger">Retirer</button>
+                {{ form_end(form_liaison_remove) }}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Modal -->

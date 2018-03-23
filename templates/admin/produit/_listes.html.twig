@@ -1,0 +1,26 @@
+<h4 class="text-success">Produits</h4>
+
+{% if produits | length > 0 %}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prix</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for produit in produits %}
+            <tr>
+                <td><a href="{{ path('acecommerce_admin_produit_show', { 'id': produit.id }) }}"> {{ produit }}</a></td>
+                <td>
+                    {% if produit.prix %}
+                        {{ produit.prix.htva }} €
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Aucun</p>
+{% endif %}

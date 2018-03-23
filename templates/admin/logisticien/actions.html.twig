@@ -1,0 +1,11 @@
+<div class="btn-toolbar" role="toolbar" style="margin: 0;">
+    <div class="btn-group">
+         {% if is_granted('ROLE_ECOMMERCE_ADMIN') %}
+
+        <a href="{{ path('acecommerce_admin_commande_index') }}" class="btn btn-primary" role="button"><i
+                    class="fas fa-list"></i>
+            Retour à la liste</a>
+         {% endif %}
+    </div>
+</div>
+<br/>

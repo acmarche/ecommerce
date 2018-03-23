@@ -1,0 +1,54 @@
+<div class="hidden-print hidden-xs">
+
+    {{ form_start(search_form, { 'attr': {'class': 'form-inline'}}) }}
+    {{ form_errors(search_form) }}
+
+    <div class="form-group">
+
+        <div class="input-group">
+            <div class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></div>
+            {{ form_widget(search_form.idcommande) }}
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></div>
+            {{ form_widget(search_form.user) }}
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></div>
+            {{ form_widget(search_form.commerce) }}
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></div>
+            {{ form_widget(search_form.lieu_livraison) }}
+        </div>
+
+    </div>
+    <br/><br/>
+
+    <div class="form-group">
+
+        <div class="input-group">
+            {{ form_row(search_form.submit) }}
+        </div>
+
+        <div class="input-group">
+            {{ form_row(search_form.raz) }}
+        </div>
+
+        <div class="input-group">
+            <a href="#" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+               role="button"><i class="glyphicon glyphicon-export"></i> Exporter la recherche <span
+                        class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href=""><i class="glyphicon glyphicon-export"></i> En Pdf</a></li>
+            </ul>
+        </div>
+    </div>
+
+    {{ form_end(search_form) }}
+
+    <br/>
+</div>

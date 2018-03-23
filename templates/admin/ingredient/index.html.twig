@@ -1,0 +1,41 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Liste des ingrédients</h3>
+    </div>
+
+    <div class="alert alert-info">
+        Les ingrédients sont à titre informatif pour le client, et sont utiles pour la recherche et le référencement
+    </div>
+
+    <a href="{{ path('acecommerce_admin_commerce_index') }}"
+       role="button"><i
+                class="fas fa-plus"></i> Ajoutez un ingrédient depuis votre commerce</a>
+
+<br /><br />
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Commerce</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ingredient in ingredients %}
+            <tr>
+                <td>
+                    <a href="{{ path('acecommerce_admin_ingredient_show', { 'id': ingredient.id }) }}">{{ ingredient }}</a>
+                </td>
+                <td>
+                    <a href="{{ path('acecommerce_admin_commerce_show', { 'id': ingredient.commerce.id }) }}">
+                        {{ ingredient.commerce }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

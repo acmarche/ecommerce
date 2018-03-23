@@ -1,0 +1,31 @@
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-pack ###
+/node_modules/
+/public/build/
+###< symfony/webpack-encore-pack ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+/phpunit.xml.dist
+###< symfony/phpunit-bridge ###
+
+###> symfony/web-server-bundle ###
+.web-server-pid
+###< symfony/web-server-bundle ###
+
+###> acmarche/bundle ###
+.idea
+/clean.sh
+/*sql
+/public/media/
+# Backup entities generated with doctrine:generate:entities command
+/src/Entity/*~
+/composer.lock
+###< acmarche/bundle ###

@@ -1,0 +1,45 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/acmarchebase/dropzone/dropzone.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Images pour {{ produit }}</h3>
+    </div>
+
+    <a href="{{ path('acecommerce_admin_produit_show', { 'id': produit.id }) }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-list"></i> Retour</a>
+
+    <a href="{{ path('acecommerce_admin_image_trier', { 'id': produit.id }) }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-sort"></i> Trier</a>
+    <br/> <br/>
+    {{ form_start(form, { 'attr': {'id': 'formdrop','class': 'dropzone'}}) }}
+    {{ form_errors(form) }}
+    {{ form_end(form) }}
+    <br/><br/>
+    {% if images | length > 0 %}
+        {% include "admin/image/images.html.twig" with ({ 'images': images, 'form_delete' : form_delete, 'type': 'produit', 'object' : produit } ) %}
+    {% else %}
+        <p class="text-warning">Aucune image actuellement</p>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/acmarchebase/dropzone/dropzone.js') }}"></script>
+    <script type="text/javascript">
+        Dropzone.options.formdrop = {
+            dictDefaultMessage: "Glissez ici vos images ou cliquez sur cette zone pour ajouter des photos",
+            init: function () {
+                this.on("addedfile", function (file) {
+                    console.log("finished");
+                });
+            }
+        };
+    </script>
+{% endblock %}

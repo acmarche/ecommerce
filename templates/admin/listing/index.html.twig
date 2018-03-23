@@ -1,0 +1,26 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <h3>Mes listings</h3>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom</th>
+            <th>Commerce</th>
+            <th>Nbre d'attributs</th>
+        </tr>
+        {% for list in listing %}
+            <tr>
+                <td>
+                    <a href="{{ path('acecommerce_admin_listing_show', {'id': list.id}) }}">
+                        {{ list.nom }}
+                    </a>
+                </td>
+                <td>{{ list.commerce }}</td>
+                <td>{{ list.attributs | length }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

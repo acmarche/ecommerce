@@ -1,0 +1,31 @@
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Numéro</th>
+        <th>Montant</th>
+        <th>Payé</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Récépissé email</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for charge in charges %}
+    <tr>
+        <td>{{ charge.id }}</td>
+        <td>{{ charge.amount / 100 }} €</td>
+        <td>{{ charge.paid }}</td>
+        <td>{{ charge.description }}</td>
+        <td>{{ charge.created |date }}</td>
+        <td>{{ charge.receipt_email }}</td>
+        <td>
+            {{ charge.status }}
+            {% if charge.status != 'success' %}<br/>
+                <span class="text-danger">{{ charge.failure_message }}</span>
+            {% endif %}
+        </td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>

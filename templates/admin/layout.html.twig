@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block favicon %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    {% endblock %}
+    <title>{% block title %}Ecommerce{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <!-- Bootstrap -->
+    <link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ecommerce_admin.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('acecommerce_admin_home') }}">Ecommerce</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample07">
+            <ul class="navbar-nav mr-auto">
+                {% if is_granted('ROLE_ECOMMERCE_ADMIN') %}
+                    {% include 'admin/menu/admin.html.twig' %}
+
+                {% elseif is_granted('ROLE_ECOMMERCE_LOGISTICIEN') %}
+                    {% include 'admin/menu/logisticien.html.twig' %}
+
+                {% elseif is_granted('ROLE_ECOMMERCE_COMMERCE') %}
+                    {% include 'admin/menu/commerce.html.twig' %}
+                {% endif %}
+
+            </ul>
+            <ul class="navbar-nav">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link waves-effect waves-light" href="{{ path('logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Se déconneter</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Begin page content -->
+<main role="main" class="container">
+
+    {% include 'flash.html.twig' %}
+
+    {% block body %}
+
+    {% endblock %}
+
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">Copyright © 2014-2018 - Marche-en-Famenne. Tous droits réservés..</span>
+    </div>
+</footer>
+
+{% block javascripts %}{% endblock %}
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="{{ asset('jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }} "></script>
+<script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
+
+{% block scripts %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,35 @@
+<div class="padding-top-2x mt-2 hidden-lg-up"></div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-fn">Prénom</label>
+            <input class="form-control" type="text" id="account-fn" value="{{ user.prenom }}" required>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-ln">Nom</label>
+            <input class="form-control" type="text" id="account-ln" value="{{ user.nom }}" required>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-email">E-mail Address</label>
+            <input class="form-control" type="email" id="account-email" value="{{ user.email }}"
+                   disabled>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="account-phone">Numéro de téléphone</label>
+            <input class="form-control" type="text" id="account-phone" value=""
+                   required>
+        </div>
+    </div>
+
+    <button class="btn btn-primary margin-right-none" type="button" data-toast
+            data-toast-position="topRight" data-toast-type="success"
+            data-toast-icon="icon-circle-check" data-toast-title="Success!"
+            data-toast-message="Your profile updated successfuly.">Mettre à jour
+    </button>
+</div>

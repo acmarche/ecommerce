@@ -1,0 +1,38 @@
+{% set action = app.request.attributes.get("_route") %}
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true"
+       aria-expanded="false">Les commandes</a>
+    <div class="dropdown-menu" aria-labelledby="dropdown07">
+        <a class="dropdown-item" href="{{ path('acecommerce_admin_commande_index') }}">A livrer</a>
+        <a class="dropdown-item" href="{{ path('acecommerce_admin_commande_livre') }}">Livrées</a>
+    </div>
+</li>
+
+<li class="nav-item">
+    <a href="{{ path('acecommerce_admin_commerce_index') }}" class="nav-link"> Votre commerce
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ path('acecommerce_admin_produit_index') }}" class="nav-link"> Vos produits
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ path('acecommerce_admin_charges_index') }}">
+        <span class="glyphicon glyphicon-search"></span> Les paiements
+    </a>
+</li>
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="dropdown07" data-toggle="dropdown" aria-haspopup="true"
+       aria-expanded="false">Paramètres...</a>
+    <div class="dropdown-menu" aria-labelledby="dropdown07">
+        <a class="dropdown-item" href="{{ path('acecommerce_admin_listing') }}">Vos attributs</a>
+        <a class="dropdown-item" href="{{ path('acecommerce_admin_categorie_index') }}">Vos catégories</a>
+        <a class="dropdown-item" href="{{ path('acecommerce_admin_listing') }}">Vos listings</a>
+        <a class="dropdown-item" href="{{ path('acecommerce_admin_ingredient_index') }}">Vos ingrédients</a>
+        <a class="dropdown-item" href="{{ path('acecommerce_admin_supplement_index') }}">Vos suppléments</a>
+    </div>
+</li>

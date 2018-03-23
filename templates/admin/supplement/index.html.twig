@@ -1,0 +1,42 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Liste des suppléments</h3>
+    </div>
+
+    <div class="alert alert-info">
+        Les suppléments permettent aux clients de personnaliser leurs plats.
+    </div>
+
+    <a href="{{ path('acecommerce_admin_commerce_index') }}"
+       role="button"><i
+                class="fas fa-plus"></i> Ajoutez un supplément depuis votre commerce</a>
+
+    <br/><br/>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Commerce</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for supplement in supplements %}
+            <tr>
+                <td><a href="{{ path('acecommerce_admin_supplement_show', { 'id': supplement.id }) }}">
+                        {{ supplement }}</a>
+                </td>
+                <td>
+                    <a href="{{ path('acecommerce_admin_commerce_show', { 'id': supplement.commerce.id }) }}">
+                        {{ supplement.commerce }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

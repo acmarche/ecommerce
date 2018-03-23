@@ -1,0 +1,41 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ commerce.nom }}{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">
+            Produits de {{ commerce.nom }}
+        </h2>
+    </div>
+
+    <div class="card-deck">
+        {% for produit in commerce.produits %}
+            {% include 'produit/_index_line.html.twig' with {'produit': produit} %}
+        {% endfor %}
+    </div>
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">Contact</h2>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col">
+                {% include 'commerce/_bottin.html.twig' %}
+                <strong>Numéro TVA:</strong> {{ commerce.numeroTva }}<br/>
+                <strong>IBAN:</strong>{{ commerce.iban }}<br/>
+            </div>
+            <div class="col">
+                {% include 'commerce/_horaire.html.twig' %}
+            </div>
+        </div>
+    </section>
+
+    {% include 'commerce/_form_contact.html.twig' %}
+
+    <hr/>
+    {% include 'commerce/_navigation.html.twig' %}
+
+{% endblock %}

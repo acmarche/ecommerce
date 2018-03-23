@@ -1,0 +1,76 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ user }}{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">
+            Mes adresses pour la facturation
+        </h2>
+    </div>
+
+    {% include 'utilisateur/_aside.html.twig' %}
+
+    <a href="{{ path('acecommerce_adresse_new') }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-plus"></i> Ajouter une adresse</a>
+    <br/><br/>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom</th>
+            <th></th>
+            <th>Actions</th>
+        </tr>
+        {% for adresse in adresses %}
+            <tr>
+                <td>{{ adresse.nom }}</td>
+                <td>
+                    {{ adresse.rue }} {{ adresse.numero }}<br/>
+                    {{ adresse.codePostal }} {{ adresse.localite }}
+                </td>
+                <td>
+                    <a href="{{ path('acecommerce_adresse_edit', {'id':adresse.id}) }}" title="Editer">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    <a title="Supprimer"
+                       role="button"
+                       class="float-right"
+                       href="#!"
+                       data-toggle="modal"
+                       data-adressenom="{{ adresse.nom }}"
+                       data-adresseid="{{ adresse.id }}"
+                       data-target="#adresseModal">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% include 'utilisateur/_aside_end.html.twig' %}
+    {% include 'adresse/_modal_delete.html.twig' %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        $('#adresseModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var nom = button.data('adressenom'); // Extract info from data-* attributes
+            var cmdid = button.data('adresseid'); // Extract info from data-* attributes
+
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            //   console.log(modal.find('modal-body-nom').value);
+            modal.find('#modal-body-nom').text(nom);
+            modal.find('#modal-body-input').val(cmdid)
+        })
+    </script>
+{% endblock %}

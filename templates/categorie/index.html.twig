@@ -1,0 +1,18 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Liste des catégories{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">Rubriques</h2>
+    </div>
+    <!-- Grid row -->
+    <div class="row">
+        {% for categorie in categories %}
+            <div class="col-lg-6 col-md-12 mb-6">
+                {% include 'categorie/_index_line.html.twig' with {'categorie': categorie} %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

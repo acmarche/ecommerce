@@ -1,0 +1,22 @@
+{% if fiche %}
+    <p>
+        <span itemprop="streetAddress">{{ fiche.rue }} {{ fiche.numero }}</span><br/>
+        <span itemprop="postalCode">{{ fiche.cp }}</span>
+        <span itemprop="addressLocality">{{ fiche.localite }}</span>
+    </p>
+    <span itemprop="email" content="+32 (0)84 31 52 04">{{ fiche.email }}</span>
+    {% if  fiche.website  %}
+        <br/>
+        <span itemprop="website" content="+32 (0)84 31 52 04">{{ fiche.website }}</span>
+    {% endif %}
+    {% if fiche.telephone %}
+        <br/>
+        <span itemprop="telephone" content="+32 (0)84 31 52 04">{{ fiche.telephone }}</span>
+    {% endif %}
+    {% if fiche.gsm %}
+        <br/>
+        <span itemprop="telephone" content="+32 (0)84 31 52 04">{{ fiche.gsm }}</span>
+    {% endif %}
+    <br/>
+
+{% endif %}

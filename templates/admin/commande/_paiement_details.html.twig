@@ -1,0 +1,40 @@
+<h4>Détails paiement</h4>
+
+{% if charge %}
+
+    <div class="alert alert-info">
+        Plus de détails sur <a href="https://dashboard.stripe.com">https://dashboard.stripe.com/</a>
+    </div>
+
+    {% include 'admin/stripe/_index_line.html.twig' with {'charges':[charge] } %}
+
+    <h5>Détails internes</h5>
+    <hr/>
+
+    {% set stripeCharge = commande.stripeCharge %}
+    <br/>
+    <table class="table table-bordered">
+        <tr>
+            <th>Charge Id</th>
+            <td>{{ stripeCharge.idCharge }}</td>
+        </tr>
+        <tr>
+            <th>Token</th>
+            <td>{{ stripeCharge.stripeToken }} €</td>
+        </tr>
+        <tr>
+            <th>TokenType</th>
+            <td>{{ stripeCharge.stripeTokenType }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ stripeCharge.stripeEmail }}</td>
+        </tr>
+        <tr>
+            <th>Ip client</th>
+            <td>{{ stripeCharge.clientIp }}</td>
+        </tr>
+    </table>
+{% else %}
+    <h4 class="text-warning">Aucun paiement</h4>
+{% endif %}

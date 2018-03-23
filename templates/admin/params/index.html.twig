@@ -1,0 +1,29 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Liste des paramètres</h3>
+    </div>
+
+    <br/><br/>
+    <table class="table table-bordered">
+        <tr>
+            <th>Tva par défaut</th>
+            <td>{{ defaultTva }}</td>
+        </tr>
+        <tr>
+            <th>Email principal</th>
+            <td>{{ emailMaster }}</td>
+        </tr>
+        <tr>
+            <th>Stripe clef publique</th>
+            <td>{{ stripePublic }}</td>
+        </tr>
+        <tr>
+            <th>Stripe clef secret</th>
+            <td>*****</td>
+        </tr>
+    </table>
+
+{% endblock %}

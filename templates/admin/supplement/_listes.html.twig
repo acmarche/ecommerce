@@ -1,0 +1,22 @@
+<h4 class="text-success">Suppléments</h4>
+
+{% if produit.supplements | length > 0 %}
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Nom</th>
+        <th>Prix</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for supplement in supplements %}
+        <tr>
+            <td><a href="{{ path('acecommerce_admin_supplement_show', { 'id': supplement.id }) }}"> {{ supplement }}</a></td>
+            <td>{{ supplement.prix }} €</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>Aucun</p>
+{% endif %}

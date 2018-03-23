@@ -1,0 +1,52 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">
+            Mes commandes
+        </h2>
+    </div>
+
+    {% include 'utilisateur/_aside.html.twig' %}
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Commerce</th>
+            <th>Montant</th>
+            <th>Livré</th>
+            <th>Facture</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.createdAt| date }}</td>
+                <td>{{ commande.commerce }}</td>
+                <td>{{ commande.cout.totalTvac | prixNice }}</td>
+                <td>
+                    {% if commande.livre %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('acecommerce_admin_commande_export_pdf', {'id':commande.id}) }}" title="Consulter">
+                        <i class="fas fa-download"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucune</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'utilisateur/_aside_end.html.twig' %}
+
+{% endblock %}

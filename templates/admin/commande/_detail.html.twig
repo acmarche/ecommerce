@@ -1,0 +1,34 @@
+<table class="table table-bordered">
+    <tr>
+        <th>Payé</th>
+        <td>
+            {% if commande.paye %}
+                Oui
+            {% else %}
+                Non
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Livré</th>
+        <td>
+            {% if commande.livre %}
+                Oui
+            {% else %}
+                Non
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Remarque livraion</th>
+        <td>{{ commande.livraisonRemarque }}</td>
+    </tr>
+    <tr>
+        <th>Lieu de livraion</th>
+        <td>{{ commande.lieuLivraison }}</td>
+    </tr>
+    <tr>
+        <th>Commerce</th>
+        <td>{{ commande.commerce }}</td>
+    </tr>
+</table>

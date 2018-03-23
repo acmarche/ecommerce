@@ -1,0 +1,16 @@
+<div class="tab-pane" id="images" role="tabpanel" aria-labelledby="home-tab">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Images</h5>
+            {% for image in images %}
+                <a href="{{ resolveImageProduit( produit, image) }}" title="{{ image.name }}" data-gallery>
+                    <img src="{{ resolveImageProduit( produit, image) | imagine_filter('acecommerce_produit_thumb') }}"
+                         alt="img" class="img-thumbnail"/>
+                </a>
+            {% else %}
+                <p class="text-warning">Aucune</p>
+            {% endfor %}
+            <br/>
+        </div>
+    </div>
+</div>

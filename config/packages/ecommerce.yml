@@ -1,0 +1,6 @@
+parameters:
+    acmarche_lunch_upload_categorie_directory: "%kernel.project_dir%/public/data/categories"
+    acmarche_lunch_download_categorie_directory: "/data/categories"
+    acmarche_lunch_upload_produit_directory: "%kernel.project_dir%/public/data/produits"
+    acmarche_lunch_download_produit_directory: "/data/produits"
+    acmarche_email_from: "ecommerce@marche.be"

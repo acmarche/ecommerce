@@ -1,0 +1,22 @@
+<!-- Modal -->
+{{ form_start(form_commentaire) }}
+{{ form_errors(form_commentaire) }}
+<div class="modal fade" id="commentaireProduitModal" tabindex="-1" role="dialog"
+     aria-labelledby="commentaireProduitModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                Ajouter une commentaire pour <strong><span id="modal-body-nom"></span></strong>
+                {{ form_row(form_commentaire.commentaire) }}
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="modal-body-input" name="commandeProduit"/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-secondary">Sauvegarder</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{ form_end(form_commentaire) }}
+<!-- end Modal -->

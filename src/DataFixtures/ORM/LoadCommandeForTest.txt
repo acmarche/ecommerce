@@ -1,0 +1,126 @@
+<?php
+
+namespace App\DataFixtures\ORM;
+
+use App\Entity\Commande\Commande;
+use App\Entity\Commande\CommandeProduit;
+use App\Entity\InterfaceDef\CommandeInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
+
+
+class LoadCommandeForTest extends Fixture implements ORMFixtureInterface, DependentFixtureInterface
+{
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+    private $manager;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ObjectManager $manager)
+    {
+        $this->loadCommande($manager);
+        $this->loadCommandeNourritue($manager);
+
+        $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     */
+    private function loadCommandeNourritue(ObjectManager $manager)
+    {
+        $args = [
+            'user' => 'homer',
+            'commerce' => 'grain',
+            'paye' => true,
+            'livre' => false,
+        ];
+
+        $commande = $this->createCommande($args, true);
+        $this->addProduit($commande, "prod-Campagnard", true);
+
+        $commande = $this->createCommande($args, true);
+        $this->addProduit($commande, "prod-Paysan", true);
+    }
+
+    public function loadCommande(ObjectManager $manager)
+    {
+        $this->manager = $manager;
+
+        $args = [
+            'user' => 'homer',
+            'commerce' => 'porte',
+            'paye' => true,
+            'livre' => false,
+        ];
+
+        $commande = $this->createCommande($args, false);
+        $this->addProduit($commande, "prod-Gomme");
+
+        $args  ['valide'] = true;
+
+        $commande = $this->createCommande($args, false);
+        $this->addProduit($commande, "prod-Crayon");
+
+        /**
+         * LOBET
+         */
+        $args  ['commerce'] = 'malice';
+
+        $commande = $this->createCommande($args, false);
+        $this->addProduit($commande, "prod-Tourne vis");
+
+        $args  ['valide'] = true;
+
+        $commande = $this->createCommande($args, false);
+        $this->addProduit($commande, "prod-Marteau");
+    }
+
+    protected function createCommande($args, $isFood = false)
+    {
+        $commande = new Commande();
+        if (isset($args['valide'])) {
+            $commande->setValide($args['valide']);
+        }
+        $commande->setUser($args['user']);
+        $commande->setCommerce($this->getReference($args['commerce']));
+        $commande->setPaye($args['paye']);
+        $commande->setLivre($args['livre']);
+        $commande->setCreatedAt(new \DateTime());
+        $commande->setUpdatedAt(new \DateTime());
+        $this->manager->persist($commande);
+
+        return $commande;
+    }
+
+    protected function addProduit(CommandeInterface $commande, $produitReference, $isFood = false)
+    {
+        $commandeProduit = new CommandeProduit();
+        $commandeProduit->setCommande($commande);
+        $commandeProduit->setProduit($this->getReference($produitReference));
+        $commandeProduit->setQuantite(2);
+        $this->manager->persist($commandeProduit);
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            LoadCommerce::class,
+            LoadProduit::class,
+            LoadProduitLunch::class,
+        );
+    }
+
+}

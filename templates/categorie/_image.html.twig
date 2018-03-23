@@ -1,0 +1,15 @@
+<div class="inner">
+    <div class="main-img">
+        {% if categorie.firstImage %}
+            <img src="{{ categorie.firstImage.url  }}"
+                 alt="Category">
+        {% endif %}
+    </div>
+    <div class="thumblist">
+        {% for image in categorie.images %}
+            {% if loop.index < 3 %}
+                <img src="{{ image.url }}" alt="Category">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

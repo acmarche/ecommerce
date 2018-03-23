@@ -1,0 +1,15 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Supplément <strong>{{ supplement }}</strong></h3>
+    </div>
+
+    {% include 'admin/supplement/actions.html.twig' with {'entity': supplement } %}
+
+    {% include 'admin/produit/listes.html.twig' with {'produits': supplement.produits} %}
+
+    {% include 'admin/supplement/delete.html.twig' with {'delete_form': delete_form, 'entity': supplement } %}
+
+{% endblock %}

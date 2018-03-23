@@ -1,0 +1,21 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Hello !{% endblock %}
+
+{% block body %}
+
+    <h3>{{ produitListing.listingAttributs }}</h3>
+
+    {{ form_start(form) }}
+    {{ form_row(form.required) }}
+    {{ form_row(form.multiple) }}
+    {{ form_row(form.expand) }}
+
+    <button type="submit" class="btn btn-primary mt-4">Mettre à jour</button>
+    {{ form_end(form) }}
+    <br/><br/>
+
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    <a href="{{ path('acecommerce_admin_produit_show', {'id':produitListing.produit.id}) }}">Annuler</a>
+
+{% endblock %}

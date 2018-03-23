@@ -1,0 +1,17 @@
+Lundi ferme
+Icone 24h livraison
+Quantite si 100
+Date livraison
+Commerce
+Adresses de depot ou adresse du client
+Produit afficher au hasard
+Produits proposer sans nom magasin chaussure tous les magasins chaussures.
+Dans un meme commerce lunch et ecommerce livraison date ?
+Livre lunch et non lunch en meme temps
+Afficher commande par lieu de livraison
+Si produit 24h avec produit rapide.
+Enabled buttom
+Code <> id
+Tab attribut
+View in site
+Error twig mettre include

@@ -1,0 +1,22 @@
+<h4 class="text-success">Ingrédients</h4>
+
+{% if ingredients | length > 0 %}
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Nom</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ingredient in produit.ingredients %}
+        <tr>
+            <td>
+                <a href="{{ path('acecommerce_admin_ingredient_show', { 'id': ingredient.id }) }}"> {{ ingredient }}</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>Aucun</p>
+{% endif %}

@@ -1,0 +1,22 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ user }}{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">
+            Mon profil
+        </h2>
+    </div>
+
+    <!-- Page Content-->
+
+    {% include 'utilisateur/_aside.html.twig' %}
+
+    {% include 'utilisateur/_form.html.twig' %}
+
+    {% include 'utilisateur/_aside_end.html.twig' %}
+
+
+{% endblock %}

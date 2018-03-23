@@ -1,0 +1,60 @@
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <th>Prix</th>
+        <td>
+            {{ produit.prixHtva }} €
+        </td>
+    </tr>
+    <tr>
+        <th>Prix promo</th>
+        <td>
+            {{ produit.prixPromoHtva }} €
+        </td>
+    </tr>
+    <tr>
+        <th>Catégorie</th>
+        <td>{{ produit.categorie }}</td>
+    </tr>
+    <tr>
+        <th>Tva définie sur le produit</th>
+        <td>
+            {% if produit.tvaApplicable %}
+                {{ produit.tvaApplicable }} %
+            {% else %} Non
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Indisponible ?<br/>
+            <span class="text-muted">Ne sera plus visible sur le site</span>
+        </th>
+        <td>
+            {% if produit.indisponible %}
+                <span class="glyphicon glyphicon-alert"></span>  <span class="text-danger"> Oui</span>
+            {% else %}
+                Non
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Stock<br/>
+            <span class="text-muted">Si égale à zéro, le produit apparaître sur le site
+              <br/>  mais comme en rupture de stock</span>
+        </th>
+        <td>
+            {% if produit.quantiteStock == 0 %}
+                <span class="glyphicon glyphicon-alert"></span> <span class="text-danger"> En rupture</span>
+            {% else %}
+                {{ produit.quantiteStock }} <span class="text-muted"> (-1 = non limité)</span>
+            {% endif %}
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% if produit.description %}
+    <p class="text-muted">{{ produit.description }}</p>
+{% endif %}
+<div class="clearfix"></div>

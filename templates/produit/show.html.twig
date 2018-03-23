@@ -1,0 +1,55 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ produit.nom }}{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">
+            {{ produit }}   </h2>
+    </div>
+
+    <div class="card">
+            <div class="card-header">
+                <a href="{{ path('acecommerce_commerce_show', {'id': produit.commerce.id}) }}">
+                    {{ produit.commerce }}
+                </a>
+            </div>
+            <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4 col-sm-12">
+                    {% if produit.firstImage %}
+                        <a class="img-fluid" href="{{ path('acecommerce_produit_show', { 'id': produit.id }) }}">
+                            <img src="{{ resolveImageProduit( produit, produit.firstImage) | imagine_filter('acecommerce_produit_ecommerce_thumb') }}"
+                                 alt="Product">
+                        </a>
+                    {% endif %}
+                    {% include 'produit/_carousel.html.twig' %}
+                </div>
+                <div class="col-lg-8 col-sm-12">
+
+                    {% include 'produit/_prix.html.twig' %}
+
+                    <p class="card-text">
+                        {{ produit.description | nl2br }}
+                    </p>
+
+                    {% include 'produit/_panier_form.html.twig' %}
+                </div>
+            </div>
+
+            {% include 'produit/_ingredients.html.twig' %}
+
+            <hr/>
+            Categorie:
+            <a class="navi-link"
+               href="{{ path('acecommerce_categorie_show', {'id':produit.categorie.id}) }}">
+                {{ produit.categorie }}
+            </a>
+        </div>
+    </div>
+
+    {% include 'produit/_proposition.html.twig' %}
+    {#% include 'produit/_carousel.html.twig' %#}
+
+{% endblock %}

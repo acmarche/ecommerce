@@ -1,0 +1,10 @@
+<div class="media">
+    <div class="media-left mr-2">
+        <img class="media-object thumbnail"
+             src="{{ vich_uploader_asset(commerce, 'imageFile') | imagine_filter('acecommerce_admin_thumb') }}"
+             alt="{{ commerce.nom }}"/>
+    </div>
+    <div class="media-body">
+        {% include 'admin/commerce/_bottin.html.twig' with {'commerce': commerce } %}
+    </div>
+</div>

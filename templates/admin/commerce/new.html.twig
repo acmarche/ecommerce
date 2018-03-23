@@ -1,0 +1,15 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Nouveau commerce</h3>
+    </div>
+
+    {% include 'admin/commerce/_form.html.twig' with {'form': form} %}
+
+    <br/><br/>
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    <a href="{{ path('acecommerce_admin_commerce_index') }}">Annuler</a>
+
+{% endblock %}

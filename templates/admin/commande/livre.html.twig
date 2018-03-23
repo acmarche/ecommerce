@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Commandes livrées</h3>
+    </div>
+
+    {% include 'admin/search/commande.html.twig' with {'search_form': search_form } %}
+
+    <h4>Commandes</h4>
+    {% include 'admin/commande/_index_line.html.twig' with {'commandes':commandes} %}
+
+{% endblock %}

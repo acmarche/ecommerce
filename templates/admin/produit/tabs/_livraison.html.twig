@@ -1,0 +1,14 @@
+<div class="tab-pane" id="livraison" role="tabpanel" aria-labelledby="home-tab">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Livraison</h5>
+            <p class="card-text">
+                {% if produit.dimension %}
+                    {% include 'admin/produit/_dimension.html.twig' with {'dimension':produit.dimension} %}
+                    {% else %}
+                    Pas d'information sur la taille et poids
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>

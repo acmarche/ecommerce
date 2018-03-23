@@ -1,0 +1,47 @@
+{% if fiche %}
+    {% if fiche.horaires | length > 0 %}
+        <h5>Heures d'ouverture</h5>
+
+        <span>
+    <link itemprop="dayOfWeek"
+          href="http://schema.org/Monday; ?&gt;"><strong>Lundi</strong><span
+                    class="ml-2">{{ fiche.horaires[0] | horaireNice }}</span>
+</span>
+        <br/>
+        <span>
+    <link itemprop="dayOfWeek"
+          href="http://schema.org/Tuesday; ?&gt;"><strong>Mardi</strong><span
+                    class="ml-2">{{ fiche.horaires[1] | horaireNice }}</span>
+</span>
+        <br/>
+        <span>
+    <link itemprop="dayOfWeek"
+          href="http://schema.org/Wednesday; ?&gt;"><strong>Mercredi</strong><span
+                    class="ml-2">{{ fiche.horaires[2] | horaireNice }}</span>
+</span>
+        <br/>
+        <span>
+    <link itemprop="dayOfWeek"
+          href="http://schema.org/Thursday; ?&gt;"><strong>Jeudi</strong><span
+                    class="ml-2">{{ fiche.horaires[3] | horaireNice }}</span>
+</span>
+        <br/>
+        <span>
+    <link itemprop="dayOfWeek"
+          href="http://schema.org/Friday; ?&gt;"><strong>Vendredi</strong><span
+                    class="ml-2">{{ fiche.horaires[4] | horaireNice }}</span>
+</span>
+        <br/>
+        <span>
+    <link itemprop="dayOfWeek"
+          href="http://schema.org/Saturday; ?&gt;"><strong>Samedi</strong><span
+                    class="ml-2">{{ fiche.horaires[5] | horaireNice }}</span>
+</span>
+        <br/>
+        <span>
+    <link itemprop="dayOfWeek"
+          href="http://schema.org/Sunday; ?&gt;"><strong>Dimanche</strong><span
+                    class="ml-2">{{ fiche.horaires[6] | horaireNice }}</span>
+</span>
+    {% endif %}
+{% endif %}

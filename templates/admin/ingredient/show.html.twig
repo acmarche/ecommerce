@@ -1,0 +1,15 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Ingrédient <strong>{{ ingredient }}</strong></h3>
+    </div>
+
+    {% include 'admin/ingredient/_actions.html.twig' with {'entity': ingredient } %}
+
+    {% include 'admin/produit/_listes.html.twig' with {'produits': ingredient.produits} %}
+
+    {% include 'admin/ingredient/_delete.html.twig' with {'delete_form': delete_form, 'entity': ingredient } %}
+
+{% endblock %}

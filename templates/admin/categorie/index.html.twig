@@ -1,0 +1,40 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Liste des catégories</h3>
+    </div>
+
+    <div class="alert alert-info">
+        Chaque commerce peut ajouter une catégorie ? A discuter
+    </div>
+
+    <a href="{{ path('acecommerce_admin_categorie_new') }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-plus"></i> Ajouter</a>
+    <br/><br/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Produits</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for categorie in categories %}
+            <tr>
+                <td>
+                    <a href="{{ path('acecommerce_admin_categorie_show', { 'id': categorie.id }) }}">
+                        {{ categorie.nom }}
+                    </a>
+                </td>
+                <td>
+                    {{ categorie.produits | length }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

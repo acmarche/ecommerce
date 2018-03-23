@@ -1,0 +1,32 @@
+<h4 class="text-success">Données provenant du bottin</h4>
+{% if fiche %}
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <th>Nom du commerce</th>
+        <td>{{ fiche.societe }}</td>
+    </tr>
+    <tr>
+        <th>Adresse</th>
+        <td>
+            {{ fiche.rue }} {{ fiche.numero }}<br/>
+            {{ fiche.cp }} {{ fiche.localite }}
+        </td>
+    </tr>
+    <tr>
+        <th>Courriel</th>
+        <td>{{ fiche.email }}</td>
+    </tr>
+    <tr>
+        <th>Site web</th>
+        <td>{{ fiche.website }}</td>
+    </tr>
+    <tr>
+        <th>Téléphone, gsm</th>
+        <td>{{ fiche.telephone }} {{ fiche.gsm }}</td>
+    </tr>
+    </tbody>
+</table>
+{% else %}
+    <p class="text-danger">Impossible d'obtenir les informations : {{ error }}</p>
+{% endif %}

@@ -1,0 +1,20 @@
+{% if dimension.hauteur %}
+    Hauteur: {{ dimension.hauteur }}<br />
+{% endif %}
+{% if dimension.largeur %}
+    Largeur: {{ dimension.largeur }}<br />
+{% endif %}
+{% if dimension.longueur %}
+    Longueur: {{ dimension.longueur }}<br />
+{% endif %}
+{% if dimension.poids %}
+    Poids: {{ dimension.poids }}
+    {% if dimension.poidsUnite %}
+        {{ dimension.hauteur }}
+    {% endif %}<br />
+{% endif %}
+
+{% if dimension.remarque %}
+    <br/>
+    {{ dimension.remarque }}<br />
+{% endif %}

@@ -1,0 +1,20 @@
+<nav class="list-group">
+
+    {% if is_granted('ROLE_ACMARCHE_ADMIN') or is_granted('ROLE_ACMARCHE_COMMERCE') or is_granted('ROLE_ACMARCHE_LOGISTICIEN') %}
+        <a class="list-group-item with-badge" href="{{ path('acecommerce_admin_home') }}"><i
+                    class="icon-bag"></i>Administration</a>
+    {% endif %}
+
+    <a class="list-group-item with-badge" href="{{ path('acecommerce_utilisateur_show') }}"><i
+                class="icon-bag"></i>Profil</a>
+
+    <a class="list-group-item with-badge" href="{{ path('acecommerce_commande_index') }}"><i
+                class="icon-bag"></i>Commandes</a>
+
+    <a class="list-group-item with-badge" href="{{ path('acecommerce_adresse_index') }}"><i
+                class="icon-bag"></i>Adresses</a>
+
+    <a class="list-group-item" href="{{ path('acecommerce_utilisateur_password') }}">
+        <i class="icon-head"></i>Mot de passe
+    </a>
+</nav>

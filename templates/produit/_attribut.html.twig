@@ -1,0 +1,26 @@
+{#% for list in productListingsAttributs %}
+    <h5> {{ list.listingAttributs }}</h5>
+
+    {% if list.expand %}
+        {% for attribut in list.listingAttributs.attributs %}
+            <input type="checkbox"  title="{{ attribut.nom }}" >
+            {{ attribut.nom }}
+            <div class="form-check">
+                <input class="form-check-input" name="attributs[]" type="checkbox" value="{{ attribut.id }}" id="check-{{ attribut.id }}">
+                <label class="form-check-label" for="check- {{ attribut.id }}">
+                    {{ attribut.nom }}
+                </label>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="form-group">
+        <select name="attributs[]"
+                class="form-control"{% if list.multiple %} multiple="multiple"{% endif %} {% if list.required %} required="required"{% endif %}>
+            <option value="0">Sélectionnez</option>
+            {% for attribut in list.listingAttributs.attributs %}
+                <option value="{{ attribut.id }}">{{ attribut }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endfor %#}

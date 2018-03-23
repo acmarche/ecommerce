@@ -1,0 +1,61 @@
+{{ form_start(form) }}
+
+<div class="form-row">
+    <div class="col">
+        {{ form_row(form.nom) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.description) }}
+    </div>
+</div>
+
+<h4 class="text-info"> Prix</h4>
+<hr/>
+<div class="form-row">
+    <div class="col">
+        {{ form_row(form.prix.htva) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.prix.promo_htva) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.tvaApplicable) }}
+    </div>
+</div>
+
+<h4 class="text-info"> Stocks</h4>
+<hr/>
+
+<div class="form-row">
+    <div class="col">
+        {{ form_row(form.categorie) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.indisponible) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.quantiteStock) }}
+    </div>
+</div>
+
+{% include 'admin/produit/form/_form_dimension.html.twig' with {'form': form} %}
+
+{% if produit.isFood %}
+    <div class="form-group">
+        <label class="control-label">Ingrédients</label>
+        <hr/>
+
+        <div id="produit_ingredients">
+            <table class="table table-bordered">
+                {% for row in form.ingredients|batch(2) %}
+                    <tr>
+                        {% for column in row %}
+                            <td>{{ form_widget(column) }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endif %}
+{{ form_end(form) }}

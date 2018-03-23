@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>{{ commande }}</h3>
+    </div>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Valider la livraison" class="btn btn-default"/>
+     {{ form_end(form) }}
+
+{% endblock %}

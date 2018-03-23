@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+    <div class="page-header">
+        <h3>Les {{ collectionCharges.data | length }} derniers paiements</h3>
+    </div>
+
+    <div class="alert alert-info">
+        Plus de détails sur <a href="https://dashboard.stripe.com">https://dashboard.stripe.com/</a>
+    </div>
+
+    {% include 'admin/stripe/_index_line.html.twig' with {'charges': collectionCharges.data} %}
+
+{% endblock %}

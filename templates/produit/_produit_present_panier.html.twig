@@ -1,0 +1,10 @@
+{% if quantiteDansPanier > 0 %}
+    <p class="text-info">
+        <i class="far fa-check-circle"></i>
+
+        {% transchoice quantiteDansPanier %}
+            {0} noitem|{1} %count% pièce|]1,Inf[ %count% pièces
+        {% endtranschoice %}
+         dans votre panier
+    </p>
+{% endif %}

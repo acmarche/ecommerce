@@ -1,0 +1,80 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/acmarchebase/jquery-ui/jquery-ui.css') }}">
+{% endblock %}
+
+{% block body -%}
+    <div class="page-header">
+        <h3>Tri des news pour {{ produit }}</h3>
+    </div>
+
+    <br/>
+    <a href="{{ path('acecommerce_admin_produit_show', { 'id': produit.id }) }}" class="btn btn-primary"
+       role="button"><i class="glyphicon glyphicon-arrow-left"></i> Retour</a>
+
+    <br/>
+    <br/>
+
+    <div id="success">
+
+    </div>
+
+    <div class="alert alert-info">
+        Cliquez sur une image et maintenez le clic tout en glissant la souris pour changer l'ordre
+    </div>
+
+    <ul id="sortable" class="list-group">
+        {% if images | length > 0 %}
+            {% for image in images %}
+                <li class="ui-state-default list-group-item" id="images-{{ image.id }}">
+                    <img class="thumbnail"
+                         src="{{ resolveImageProduit( produit, image) | imagine_filter('acecommerce_produit_list') }}"
+                         alt="{{ image.name }}"/>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p class="text-warning">Aucune news</p>
+        {% endif %}
+    </ul>
+
+    <br/>
+    <a href="{{ path('acecommerce_admin_produit_show', { 'id': produit.id }) }}">
+        <span class="fas fa-list"></span> Retour
+    </a>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('bundles/acmarchebase/jquery-ui/jquery-ui.js') }}"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#sortable").sortable({
+                // limitons les déplacements sur l'axe des ordonnées, ce sera plus propre
+                axis: 'y',
+                update: function (event, ui) {
+                    // Construit un tableau des ids des stories
+                    serial = $(this).sortable('serialize');
+                    // Appelle une action en ajax
+                    $.ajax({
+                        url: '{{ path('acecommerce_admin_image_trier', {'id' : produit.id}) }}',
+                        type: "post",
+                        data: serial,
+                        success: function (html) {
+                            $('#success').html(html);
+                            $('#success').fadeIn(500);
+                            //       $('#success').fadeOut(2000);
+                        },
+                        error: function () {
+                            alert("Oups le tri ne s'est pas enregistré");
+                        }
+                    })
+                }
+            });
+
+            $("#sortable").disableSelection();
+        });
+
+    </script>
+{% endblock %}

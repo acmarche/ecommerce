@@ -1,0 +1,36 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Liste des lieux de livraison</h3>
+    </div>
+
+    <a href="{{ path('acecommerce_admin_lieulivraison_new') }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-plus"></i> Ajouter</a>
+    <br/><br/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Commandes</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for lieulivraison in lieu_livraisons %}
+            <tr>
+                <td>
+                    <a href="{{ path('acecommerce_admin_lieulivraison_show', { 'id': lieulivraison.id }) }}">
+                        {{ lieulivraison.nom }}
+                    </a>
+                </td>
+                <td>
+                    {{ lieulivraison.commandes | length }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Liste des commerces</h3>
+    </div>
+
+    {% if is_granted('ROLE_ECOMMERCE_ADMIN') %}
+        <a href="{{ path('acecommerce_admin_commerce_new') }}" class="btn btn-primary"
+           role="button"><i
+                    class="fas fa-plus"></i> Ajouter un commerce</a>
+        <br/><br/>
+    {% endif %}
+
+    {% if commerces | length > 0 %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Commandes</th>
+                <th>Produits</th>
+                <th>Suppléments</th>
+                <th>Ingrédients</th>
+                <th>Listings</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for commerce in commerces %}
+                <tr>
+                    <td>
+                        <a href="{{ path('acecommerce_admin_commerce_show', { 'id': commerce.id }) }}">
+                            {{ commerce.nom }}
+                        </a>
+                    </td>
+                    <td>{{ commerce.commandes | length }}</td>
+                    <td>{{ commerce.produits | length }}</td>
+                    <td>{{ commerce.supplements | length }}</td>
+                    <td>{{ commerce.ingredients | length }}</td>
+                    <td>{{ commerce.listingAttributs | length }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+
+        <p class="text-danger">Aucun commerce associé à votre compte.</p>
+
+    {% endif %}
+{% endblock %}

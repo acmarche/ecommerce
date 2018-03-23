@@ -1,0 +1,11 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Les commandes à valider</h3>
+    </div>
+
+    {% include 'admin/commande/_index_line.html.twig' with {'commandes':commandes} %}
+
+{% endblock %}

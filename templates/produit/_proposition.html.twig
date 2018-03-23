@@ -1,0 +1,26 @@
+<div class="divider-new">
+    <h2 class="h2-responsive">
+        Produits au hasard</h2>
+</div>
+
+<section class="section">
+    <div class="card-deck">
+        {% for suggestion in suggestions %}
+            {% include 'produit/_index_line.html.twig' with {'produit': suggestion} %}
+        {% endfor %}
+    </div>
+</section>
+
+<div class="divider-new">
+    <h2 class="h2-responsive">
+        Produits non lunch au hasard
+    </h2>
+</div>
+
+<section class="section">
+    <div class="card-deck">
+        {% for suggestion in suggestionsNonLunch %}
+            {% include 'produit/_index_line.html.twig' with {'produit': suggestion} %}
+        {% endfor %}
+    </div>
+</section>

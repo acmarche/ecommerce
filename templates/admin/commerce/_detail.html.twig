@@ -1,0 +1,38 @@
+<h4 class="text-success">Détails</h4>
+
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <th>Commande envoyé sur l'email</th>
+        <td>{{ commerce.emailCommande }}</td>
+    </tr>
+    <tr>
+        <th>Numéro de réception des sms</th>
+        <td>{{ commerce.smsNumero }}</td>
+    </tr>
+    <tr>
+        <th>Référence bottin</th>
+        <td>{{ commerce.bottinId }}</td>
+    </tr>
+    <tr>
+        <th>Tva définie sur le commerce</th>
+        <td>
+            {% if commerce.tvaApplicable %}
+                {{ commerce.tvaApplicable }} %
+            {% else %} Non
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Numéro de Tva</th>
+        <td>{{ commerce.numeroTva }}</td>
+    </tr>
+    <tr>
+        <th>Commerce désactivé ?</th>
+        <td>
+            {% if commerce.indisponible %}Oui{% else %}Non{% endif %}
+        </td>
+    </tr>
+    </tbody>
+</table>
+

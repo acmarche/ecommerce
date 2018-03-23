@@ -1,0 +1,26 @@
+<h3>Commande numéro {{ commande.id }}</h3>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Payé</th>
+        <td>
+            {% if commande.paye %}
+                Oui
+            {% else %}
+                Non
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Utilisateur</th>
+        <td>{{ commande.user }}</td>
+    </tr>
+    <tr>
+        <th>Lieu de livraion</th>
+        <td>{{ commande.lieuLivraison }}</td>
+    </tr>
+    <tr>
+        <th>Commerce</th>
+        <td>{{ commande.commerce }}</td>
+    </tr>
+</table>

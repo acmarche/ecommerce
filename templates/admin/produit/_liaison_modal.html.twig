@@ -1,0 +1,26 @@
+<div class="modal fade" id="attributModal" tabindex="-1" role="dialog" aria-labelledby="attributModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Selectionnez un listing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(form_liaison) }}
+            {{ form_errors(form_liaison) }}
+            <div class="modal-body">
+                {{ form_row(form_liaison.listingAttributs) }}
+                {{ form_row(form_liaison.required) }}
+                {{ form_row(form_liaison.multiple) }}
+                {{ form_row(form_liaison.expand) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+            </div>
+            {{ form_end(form_liaison) }}
+        </div>
+    </div>
+</div>

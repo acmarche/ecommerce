@@ -1,0 +1,22 @@
+<h4 class="text-success">Listing</h4>
+
+{% if commerce.listingAttributs | length > 0 %}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Nbre attributs</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for listing in commerce.listingAttributs %}
+            <tr>
+                <td><a href="{{ path('acecommerce_admin_listing_show', { 'id': listing.id }) }}"> {{ listing }}</a></td>
+                <td>{{ listing.attributs | length }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Aucun</p>
+{% endif %}

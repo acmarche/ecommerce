@@ -1,0 +1,32 @@
+<h4 class="text-success">Liste des produits commandés</h4>
+
+{% if commandeProduits | length > 0 %}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Quantité</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for commandeProduit in commandeProduits %}
+            {% set produit = commandeProduit.produit %}
+            {% set attributs = commandeProduit.attributs %}
+            <tr>
+                <td>
+                    {{ produit }}
+                </td>
+                <td>{{ commandeProduit.quantite }}</td>
+                <td>
+                    {% for attribut in attributs %}
+                        {{ attribut }}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Aucun</p>
+{% endif %}

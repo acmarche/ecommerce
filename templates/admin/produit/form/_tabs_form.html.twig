@@ -1,0 +1,25 @@
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+           aria-selected="true">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#livraison" role="tab" aria-controls="livraison"
+           aria-selected="false">Livraison</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="messages-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images"
+           aria-selected="false">Images</a>
+    </li>
+    {% if produit.isFood %}
+    <li class="nav-item">
+        <a class="nav-link" id="settings-tab" data-toggle="tab" href="#supplements" role="tab" aria-controls="supplements"
+           aria-selected="false">Suppléments</a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+        <a class="nav-link" id="settings-tab" data-toggle="tab" href="#attributs" role="tab" aria-controls="attributs"
+           aria-selected="false">Attributs</a>
+    </li>
+</ul>

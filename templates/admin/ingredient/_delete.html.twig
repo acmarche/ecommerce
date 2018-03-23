@@ -1,0 +1,27 @@
+<div class="row hidden-print">
+    <br/>
+    <div class='col-md-2 col-md-offset-6'>
+        <a id="edit_enfant" href="#" class="btn btn-danger btn-sm" role="button" data-toggle="modal"
+           data-target="#myModal">
+            <i class="glyphicon glyphicon-trash"></i> Supprimer</a>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Suppression d'un ingrédient</h4>
+            </div>
+            <div class="modal-body">
+                Etes vous sur de vouloir <strong>supprimer</strong> <br/> <strong>{{ entity }} ? </strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Annuler</button>
+                {{ form(delete_form) }}
+            </div>
+        </div>
+    </div>
+</div>

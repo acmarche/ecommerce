@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block favicon %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    {% endblock %}
+    <title>{% block title %}Ecommerce{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+    <!-- Bootstrap -->
+    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/ecom.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+{% include 'base/header.html.twig' %}
+<!-- Begin page content -->
+<main role="main" class="">
+
+    <div class="container">
+
+        {% include 'flash.html.twig' %}
+
+        {% block body %}
+
+        {% endblock %}
+
+        {% include 'base/footer.html.twig' %}
+
+    </div>
+
+</main>
+
+
+{% block javascripts %}{% endblock %}
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="{{ asset('jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }} "></script>
+<script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/holder.min.js') }} "></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    Holder.addTheme('thumb', {
+        bg: '#55595c',
+        fg: '#eceeef',
+        text: 'Thumbnail'
+    });
+</script>
+{% block scripts %}
+
+{% endblock %}
+</body>
+</html>

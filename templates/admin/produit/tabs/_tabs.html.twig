@@ -1,0 +1,31 @@
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+           aria-selected="true">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#livraison" role="tab" aria-controls="livraison"
+           aria-selected="false">Livraison</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="messages-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images"
+           aria-selected="false">Images</a>
+    </li>
+    {% if produit.isFood %}
+    <li class="nav-item">
+        <a class="nav-link" id="settings-tab" data-toggle="tab" href="#ingredients" role="tab" aria-controls="ingredients"
+           aria-selected="false">Ingrédients</a>
+    </li>
+    {% endif %}
+    {#% if produit.isFood %}
+    <li class="nav-item">
+        <a class="nav-link" id="settings-tab" data-toggle="tab" href="#supplements" role="tab" aria-controls="supplements"
+           aria-selected="false">Suppléments</a>
+    </li>
+    {% endif %#}
+    <li class="nav-item">
+        <a class="nav-link" id="settings-tab" data-toggle="tab" href="#listings" role="tab" aria-controls="listings"
+           aria-selected="false">Listings</a>
+    </li>
+</ul>

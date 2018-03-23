@@ -1,0 +1,17 @@
+{% set action = app.request.attributes.get("_route") %}
+
+<li class="nav-item">
+    <a href="{{ path('acecommerce_admin_commerce_index') }}" class="nav-link"> Commerces
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ path('acecommerce_logisticien_commande_index') }}" class="nav-link">
+        <span class="glyphicon glyphicon-shopping-cart"></span> Commandes à livrer
+    </a>
+</li>
+
+<li class="nav-itemp">
+    <a href="{{ path('acecommerce_admin_commande_livre') }}" class="nav-link"> Commandes livrées
+    </a>
+</li>

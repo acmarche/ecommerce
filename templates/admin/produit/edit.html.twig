@@ -1,0 +1,15 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Edition du produit <strong>{{ produit }}</strong> ({{ produit.categorie }})</h3>
+    </div>
+
+    {% include 'admin/produit/form/_form.html.twig' with {'form': edit_form} %}
+
+    <br /><br />
+    <i class="glyphicon glyphicon-arrow-left"/>
+    <a href="{{ path('acecommerce_admin_commerce_show', {'id': produit.commerce.id}) }}">Annuler</a>
+
+{% endblock %}

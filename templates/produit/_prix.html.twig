@@ -1,0 +1,6 @@
+{% if produit.prixPromoHtva %}
+    <del class="text-muted text-normal"> {{ produit | prixTvac }} €</del>
+    {{ produit | prixPromoTvac }} €
+{% else %}
+    {{ produit | prixTvac }} €
+{% endif %}

@@ -1,0 +1,28 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>{{ listingAttributs }}</h3>
+    </div>
+
+    {% include('admin/listing/_actions.html.twig') %}
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Nom</th>
+            <th>Prix htva</th>
+        </tr>
+        {% for attribut in listingAttributs.attributs %}
+            <tr>
+                <td>{{ attribut }}</td>
+                <td>
+                    {% if attribut.prix %}
+                        {{ attribut.prix.htva }} €
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

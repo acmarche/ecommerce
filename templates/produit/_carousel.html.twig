@@ -1,0 +1,18 @@
+{% if images | length > 1 %}
+
+    <div class="mdb-lightbox pt-2">
+        <div class="row">
+            {% for image in images %}
+                <figure class="col-md-4">
+                    <a href="{{ resolveImageProduit( produit, image) }}" title="{{ image.name }}"
+                       data-size="1600x1067">
+                        <img src="{{ resolveImageProduit( produit, image) | imagine_filter('acecommerce_produit_thumb') }}"
+                             alt="img"
+                             class="img-fluid"/>
+                    </a>
+                </figure>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endif %}

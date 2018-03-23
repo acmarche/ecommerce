@@ -1,0 +1,10 @@
+
+{% for supplement in produit.supplements %}
+
+    <label for="supplement-{{ supplement.id }}">
+        <input type="checkbox" name="supplements[]" value="{{ supplement.id }}"/>
+    </label>
+
+    {{ supplement }} ({{ supplement.prix }} €)
+
+{% endfor %}

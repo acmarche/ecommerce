@@ -1,0 +1,28 @@
+<!-- Post Navigation-->
+<div class="row">
+    <div class="col-4">
+        {% if previous %}
+            <a class="btn btn-outline-secondary btn-sm"
+               href="{{ path('acecommerce_commerce_show', {'id': previous.id }) }}">
+                <i class="fas fa-arrow-left"></i>{{ previous.nom }}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="col-4">
+        <a class="btn btn-outline-secondary btn-sm"
+           href="{{ path('acecommerce_commerce_index') }}"
+           data-toggle="tooltip" data-placement="top" title="Tous les commerces"><i
+                    class="fas fa-list"></i>
+        </a>
+    </div>
+
+    <div class="col-4">
+        {% if next %}
+            <a class="btn btn-outline-secondary btn-sm"
+               href="{{ path('acecommerce_commerce_show', {'id': next.id }) }}">
+                &nbsp;<i class="fas fa-arrow-right"></i>{{ next.nom }}
+            </a>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="card mb-3">
+
+    <a href="{{ path('acecommerce_categorie_show', { 'id': categorie.id }) }}">
+        {% if categorie.firstImage %}
+            <img class="img-fluid" src="{{ resolveImageCategorie( categorie, categorie.firstImage) }}"
+                 alt="Category">
+        {% endif %}
+    </a>
+
+    <div class="card-body">
+        <!--Title-->
+        <h4 class="card-title">{{ categorie }}</h4>
+        <!--Text-->
+        <p class="card-text">{{ categorie.description }}.</p>
+
+        <div class="text-center">
+        <a href="{{ path('acecommerce_categorie_show', {'id': categorie.id}) }}" class="btn btn-outline-info btn-md">
+            Produits
+        </a>
+        </div>
+    </div>
+</div>
+
+
+
+

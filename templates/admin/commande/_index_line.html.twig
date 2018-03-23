@@ -1,0 +1,56 @@
+{% if commandes | length > 0 %}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Commande</th>
+            <th>Date</th>
+            <th>Payé</th>
+            <th>Livré</th>
+            <th>Utilisateur</th>
+            <th>Commerce</th>
+            <th>Produits</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td>
+                    <a href="{{ path('acecommerce_admin_commande_show', { 'id': commande.id }) }}">
+                        {{ commande }}
+                    </a>
+                </td>
+                <td>
+                    {{ commande.createdAt | date('d-m-Y H:i ') }}
+                </td>
+                <td>
+                    {% if commande.paye %}
+                        Oui
+                    {% else %}
+                        Non
+                    {% endif %}
+                </td>
+                <td>
+                    {% if commande.livre %}
+                        Oui
+                    {% else %}
+                        Non
+                    {% endif %}
+                </td>
+                <td>
+                    {{ commande.user }}
+                </td>
+                <td>
+                    {{ commande.commerce }}
+                </td>
+                <td>
+                    {{ commande.commandeProduits | length }}
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="text-warning">Aucune commande</p>
+{% endif %}
+

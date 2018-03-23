@@ -1,0 +1,20 @@
+{% set action = app.request.attributes.get("_route") %}
+<nav class="navbar navbar-expand-lg  navbar-light bg-white border-bottom box-shadow">
+    <a class="navbar-brand" href="{{ path('acecommerce_home') }}">Ecommerce</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample05">
+        <ul class="navbar-nav mr-auto2">
+            {% include 'base/top_bar.html.twig' %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('acecommerce_contact') }}">
+                    <i class="fa fa-envelope"></i> Contact</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-md-0" action="{{ path('acecommerce_produit_index') }}" method="get">
+            <input class="form-control" type="text" name="motclef" placeholder="Rechercher">
+        </form>
+    </div>
+</nav>

@@ -1,0 +1,20 @@
+<!-- Modal -->
+<div class="modal fade" id="commandeProduitModal" tabindex="-1" role="dialog"
+     aria-labelledby="commandeProduitModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                Retirer <strong><span id="modal-body-nom"></span></strong> du panier ?
+            </div>
+            <div class="modal-footer">
+                {{ form_start(form_delete) }}
+                {{ form_errors(form_delete) }}
+                <input type="hidden" id="modal-body-input" name="commandeProduit"/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-danger">Retirer</button>
+                {{ form_end(form_delete) }}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Modal -->

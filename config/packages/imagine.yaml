@@ -1,0 +1,117 @@
+liip_imagine:
+#    # valid drivers options include "gd" or "gmagick" or "imagick"
+    driver: "imagick"
+
+    filter_sets:
+        cache: ~
+        acecommerce_291_200:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [291, 200], mode: outbound }
+        acecommerce_admin_thumb:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [250, 188], mode: outbound }
+        acecommerce_admin_zoom:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [1024, 768], mode: inset }
+        acecommerce_produit_thumb:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [250, 188], mode: outbound }
+        acecommerce_produit_list:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [150, 150], mode: outbound }
+        acecommerce_produit_zoom:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [360, 270], mode: inset }
+        acecommerce_commerce_thumb:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [250, 188], mode: outbound }
+        acecommerce_commerce_zoom:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [360, 270], mode: inset }
+        acecommerce_categorie_thumb:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [170, 105], mode: outbound }
+        acecommerce_categorie_zoom:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [360, 270], mode: inset }
+
+        ##############################
+        # ECOMMERCE
+        acecommerce_produit_ecommerce_thumb:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [250, 188], mode: outbound }
+        acecommerce_produit_ecommerce_show:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [1000, 667], mode: outbound }
+        acecommerce_commerce_ecommerce_thumb:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [700, 333], mode: inset }
+        acecommerce_commerce_ecommerce_zoom:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [945, 500], mode: inset }
+        acecommerce_commerce_home_slider:
+            quality: 100
+            cache: default
+            filters:
+                thumbnail: { size: [555, 440], mode: inset }
+
+#
+#    # define your filter sets under this option
+#    filter_sets:
+#
+#        # an example thumbnail transformation definition
+#        # https://symfony.com/doc/current/bundles/LiipImagineBundle/basic-usage.html#create-thumbnails
+#        squared_thumbnail:
+#
+#            # set your image quality defaults
+#            jpeg_quality:          85
+#            png_compression_level: 8
+#
+#            # setup the filter steps to apply for this transformation
+#            filters:
+#
+#                # auto rotate the image using EXIF metadata
+#                auto_rotate: ~
+#
+#                # strip the image of all metadata
+#                strip: ~
+#
+#                # scale and square the image to the given dimensions
+#                thumbnail:
+#                    size:          [253, 253]
+#                    mode:          outbound
+#                    allow_upscale: true
+#
+#                # create border by placing image on larger black background
+#                background:
+#                    size:     [256, 256]
+#                    position: center
+#                    color:    '#fff'

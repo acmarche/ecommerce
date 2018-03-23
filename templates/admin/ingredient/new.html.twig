@@ -1,0 +1,18 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Nouvel ingrédient</h3>
+    </div>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Ajouter" class="btn btn-default"/>
+    {{ form_end(form) }}
+
+    <br /><br />
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    <a href="{{ path('acecommerce_admin_commerce_show', {'id': ingredient.commerce.id}) }}">Annuler</a>
+
+{% endblock %}

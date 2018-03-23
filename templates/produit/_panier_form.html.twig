@@ -1,0 +1,13 @@
+{% if produit.quantiteStock == 0 %}
+    <p class="text-warning">Rupture de stock</p>
+{% else %}
+    {% include 'produit/_produit_present_panier.html.twig' %}
+
+    {{ form_start(form, {'action': path('acecommerce_panier_add', {'id': produit.id})}) }}
+    {{ form_errors(form) }}
+    {% for listing in produit.produitListingsAttributs %}
+        {% set name = "attributs-"~listing.id %}
+        {{ form_row(form.offsetGet(name)) }}
+    {% endfor %}
+    {{ form_end(form) }}
+{% endif %}

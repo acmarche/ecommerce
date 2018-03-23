@@ -1,0 +1,75 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <h2>Mon panier</h2>
+
+    {% include 'panier/_details.html.twig' %}
+    <br/>
+
+    {{ form_start(form_vider) }}
+    <input type="submit" class="btn btn-outline-danger float-left" value="Vider le panier"/>
+    {{ form_end(form_vider) }}
+
+    <a href="{{ path('acecommerce_livraison') }}" role="button" class="btn btn-primary float-right">
+        Date et lieu de livraison</a>
+
+    {% include 'panier/_modal_remove_produit.html.twig' %}
+    {% include 'panier/_modal_comment_produit.html.twig' %}
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        $('#commandeProduitModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var nom = button.data('produitnom'); // Extract info from data-* attributes
+            var cmdid = button.data('cmdproduitid'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            modal.find('#modal-body-nom').text(nom);
+            modal.find('#modal-body-input').val(cmdid)
+        })
+    </script>
+    <script type="text/javascript">
+        $('#commentaireProduitModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var nom = button.data('produitnom'); // Extract info from data-* attributes
+            var cmdid = button.data('cmdproduitid'); // Extract info from data-* attributes
+            var commentaire = button.data('commentaire'); // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+
+            console.log(commentaire);
+            modal.find('#form_commentaire').text(commentaire);
+            modal.find('#modal-body-nom').text(nom);
+            modal.find('#modal-body-input').val(cmdid)
+        })
+    </script>
+    <script>
+        function update(input) {
+            // Attach a submit handler to the form
+            //  $(":input").bind('focusout', (function (event) {
+
+            // Stop form from submitting normally
+            //  event.preventDefault();
+
+            // Get some values from elements on the page:
+            // var $input = $(this);
+            var
+                term = input.data('id'),
+                quantite = input.val(),
+                url = '{{ path('acecommerce_panier_update') }}';
+            console.log(quantite);
+            // Send the data using post
+            var posting = $.post(url, {idCommandeProduit: term, quantiteProduit: quantite});
+
+            // Put the results in a div
+            posting.done(function (data) {
+
+                var content = data.data.html;
+                $("#detailpanier").empty().append(content);
+            });
+            //}            ))
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>{{ categorie }}</h3>
+    </div>
+
+    {{ include('admin/categorie/_actions.html.twig') }}
+
+    {% if categorie.firstImage %}
+        <img class="thumbnail"
+             src="{{ resolveImageCategorie( categorie, categorie.firstImage) | imagine_filter('acecommerce_admin_thumb') }}"
+             alt="{{ categorie.nom }}"/>
+    {% endif %}
+
+    <h4>Images</h4>
+    {% for image in images %}
+        <a href="{{ image.url }}" title="{{ image.name }}" data-gallery>
+            <img src="{{ resolveImageCategorie( categorie, image) | imagine_filter('acecommerce_categorie_thumb') }}"
+                 alt="img"
+                 class="img-thumbnail"/>
+        </a>
+    {% endfor %}
+
+    {% include 'admin/produit/_listes.html.twig' with {'produits': categorie.produits} %}
+
+    {{ include('admin/categorie/_delete.html.twig') }}
+
+{% endblock %}

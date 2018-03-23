@@ -1,0 +1,32 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>
+            {{ commerce.nom }}
+            <a href="{{ path('acecommerce_commerce_show', { 'id': commerce.id }) }}" class="btn btn-secondary float-right"
+               role="button" target="_blank"><i
+                        class="fas fa-eye"></i> Voir sur le site</a>
+        </h3>
+    </div>
+
+    {% include 'admin/commerce/_actions.html.twig' %}
+
+    {% if commerce.imageName %}
+        {% include 'admin/commerce/_image.html.twig' %}
+    {% else %}
+        {% include 'admin/commerce/_bottin.html.twig' %}
+    {% endif %}
+
+    {% include 'admin/commerce/_detail.html.twig' %}
+
+    {% include 'admin/produit/_listes.html.twig' with {'produits': commerce.produits} %}
+
+    {% include 'admin/listing/_listes.html.twig' %}
+
+    {% if is_granted('ROLE_ECOMMERCE_ADMIN') %}
+        {% include 'admin/commerce/_delete.html.twig' %}
+    {% endif %}
+
+{% endblock %}

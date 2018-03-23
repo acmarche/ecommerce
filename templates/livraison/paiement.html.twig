@@ -1,0 +1,39 @@
+{% extends 'layout.html.twig' %}
+
+{% block scripts %}
+
+{% endblock %}
+
+{% block body %}
+
+    <h2>Paiement</h2>
+
+    {% include 'panier/_progression.html.twig' %}
+
+    {% for commande in commandes %}
+        <h4>
+            Commande chez {{ commande.commerce }} {{ commande.cout.totaltvac }} €)
+        </h4>
+
+        <form action="{{ path('acecommerce_paiement_validation', {'id': commande.id}) }}" method="POST">
+            <script
+                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="{{ publicKey }}"
+                    data-amount="{{ commande.cout.totalincents }}"
+                    data-name="AcMarche"
+                    data-email="{{ app.user.email }}"
+                    data-description="{{ commande.commerce }}"
+                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                    data-locale="fr"
+                    data-currency="eur"
+                    data-label="Payer avec ma carte"
+                    data-panel-labe2l="Mon label">
+            </script>
+        </form>
+
+    {% endfor %}
+
+
+
+
+{% endblock %}

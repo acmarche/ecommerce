@@ -1,0 +1,52 @@
+{
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.17.0",
+    "babel-preset-react": "^6.24.1",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.7",
+    "webpack-cli": "^2.0.9"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production"
+  },
+  "dependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "material-ui": "^1.0.0-beta.37",
+    "material-ui-icons": "^1.0.0-beta.36",
+    "prop-types": "^15.6.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-icons": "^2.2.7",
+    "react-redux": "^5.0.7",
+    "react-tap-event-plugin": "^3.0.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
+  },
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "babel": {
+    "presets": [
+      "react",
+      "es2015",
+      "stage-1"
+    ]
+  },
+  "main": "webpack.config.js",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "repository": "git+https://github.com/acmarche/ecommerce.git",
+  "author": "<blast.off2010@hotmail.com>",
+  "bugs": {
+    "url": "https://github.com/acmarche/ecommerce/issues"
+  },
+  "homepage": "https://github.com/acmarche/ecommerce#readme",
+  "description": ""
+}

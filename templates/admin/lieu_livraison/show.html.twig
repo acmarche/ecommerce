@@ -1,0 +1,25 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+     <div class="page-header">
+        <h3>{{ lieu_livraison }}</h3>
+    </div>
+
+    <address>
+        {{ lieu_livraison.rue }} {{ lieu_livraison.numero }} <br />
+        {{ lieu_livraison.codePostal }} {{ lieu_livraison.localite }}<br />
+
+        <p>
+        {{ lieu_livraison.description }}
+        </p>
+
+    </address>
+
+    {% include 'admin/lieu_livraison/actions.html.twig' %}
+
+    {% include 'admin/commande/index_line.html.twig' with {'commandes': lieu_livraison.commandes} %}
+
+    {% include 'admin/lieu_livraison/delete.html.twig' %}
+
+{% endblock %}

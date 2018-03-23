@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+    <div class="page-header">
+        <h3>Edition du supplément <strong>{{ supplement }}</strong></h3>
+    </div>
+
+    {{ form_start(edit_form) }}
+    {{ form_widget(edit_form) }}
+    <input type="submit" value="Mettre à jour" class="btn btn-default"/>
+    {{ form_end(edit_form) }}
+
+    <br /><br />
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    <a href="{{ path('acecommerce_admin_commerce_show', {'id': supplement.commerce.id}) }}">Annuler</a>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% if commande.isFood %}
+
+<div class="stepwizard">
+    <div class="stepwizard-row">
+         <div class="stepwizard-step">
+            <button type="button" class="btn btn-{{ commande.paye | etapeCheck }} btn-circle">1</button>
+            <p>Le client a payé</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-{{ commande.valide | etapeCheck }} btn-circle">2</button>
+            <p>Le commerce valide la commande</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-{{ commande.livre | etapeCheck }} btn-circle">3</button>
+            <p>Le logisticien prends en charge la commande à livrer</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-default btn-circle" disabled="disabled">4</button>
+            <p>Livraison et fin</p>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="stepwizard">
+    <div class="stepwizard-row">
+          <div class="stepwizard-step">
+            <button type="button" class="btn btn-{{ commande.paye | etapeCheck }} btn-circle">1</button>
+            <p>Le client a payé</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-{{ commande.valide | etapeCheck }} btn-circle">2</button>
+            <p>Le logisticien prends en charge la commande à livrer</p>
+        </div>
+        <div class="stepwizard-step">
+            <button type="button" class="btn btn-{{ commande.livre | etapeCheck }} btn-circle" disabled="disabled">3</button>
+            <p>Livraison et fin</p>
+        </div>
+    </div>
+</div>
+{% endif %}

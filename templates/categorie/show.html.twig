@@ -1,0 +1,27 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}{{ categorie.nom }}{% endblock %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">{{ categorie.nom }}</h2>
+    </div>
+
+    {% if categorie.children | length > 0 %}
+        <div class="card-deck">
+        {% for child in categorie.children %}
+            {% include 'categorie/_index_line.html.twig' with {'categorie': child} %}
+        {% endfor %}
+        </div>
+    {% else %}
+        {% if categorie.produits | length > 0 %}
+            <div class="card-deck">
+                {% for produit in categorie.produits %}
+                    {% include 'produit/_index_line.html.twig' with {'produit': produit} %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

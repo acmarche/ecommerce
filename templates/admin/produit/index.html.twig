@@ -1,0 +1,52 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>Liste des produits</h3>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prix htva</th>
+            <th>Catégorie</th>
+            <th>Commerce</th>
+            <th>Disponible</th>
+            <th>Ingrédients</th>
+            <th>Commandes</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for produit in produits %}
+            <tr>
+                <td>
+                    <a href="{{ path('acecommerce_admin_produit_show', { 'id': produit.id }) }}">{{ produit.nom }}</a>
+                </td>
+                <td>{{ produit.prixHtva }} €</td>
+                <td>{{ produit.categorie }}</td>
+                <td>
+                    <a href="{{ path('acecommerce_admin_commerce_show', { 'id': produit.commerce.id }) }}">
+                        {{ produit.commerce }}
+                    </a>
+                </td>
+                <td>
+                    {% if produit.indisponible %}
+                  <span class="glyphicon glyphicon-alert"></span> <span class="text-danger"> Non</span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-check"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ produit.ingredients | length }}
+                </td>
+                <td>
+                    {{ produit.commandeProduits | length }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

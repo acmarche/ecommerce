@@ -1,0 +1,49 @@
+<ul class="menu">
+    <li class="has-children"><span>
+                    <a href="{{ path('acecommerce_categorie_show', {'id':lunch.id}) }}">{{ lunch.nom }}</a>
+            <span class="sub-menu-toggle"></span></span>
+
+        <ul class="offcanvas-submenu">
+            {% for categorie in lunch.children %}
+                <li>
+                    <a href="{{ path('acecommerce_categorie_show', {'id': categorie.id}) }}">
+                        {{ categorie.nom }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li class="has-children"><span><a
+                    href="{{ path('acecommerce_categorie_show', {'id':ecommerce.id}) }}">{{ ecommerce.nom }}</a><span
+                    class="sub-menu-toggle"></span></span>
+        <ul class="offcanvas-submenu">
+            {% for categorie in ecommerce.children %}
+                <li>
+                    <a href="{{ path('acecommerce_categorie_show', {'id': categorie.id}) }}">
+                        {{ categorie.nom }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+
+    <li class="has-children"><span><a href="#">Bags</a><span class="sub-menu-toggle"></span></span>
+        <ul class="offcanvas-submenu">
+            <li><a href="#">Handbags</a></li>
+            <li><a href="#">Backpacks</a></li>
+            <li><a href="#">Luggage</a></li>
+            <li><a href="#">Wallets</a></li>
+            <li><a href="#">View All</a></li>
+        </ul>
+    </li>
+    <li class="has-children"><span><a href="#">Accessories</a><span class="sub-menu-toggle"></span></span>
+        <ul class="offcanvas-submenu">
+            <li><a href="#">Sunglasses</a></li>
+            <li><a href="#">Hats</a></li>
+            <li><a href="#">Watches</a></li>
+            <li><a href="#">Jewelry</a></li>
+            <li><a href="#">Belts</a></li>
+            <li><a href="#">View All</a></li>
+        </ul>
+    </li>
+</ul>

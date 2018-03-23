@@ -1,0 +1,42 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+
+    <div class="divider-new">
+        <h2 class="h2-responsive">
+            Création d'un compte
+        </h2>
+    </div>
+
+    <section class="section">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <div class="form-row">
+            <div class="col">
+                {{ form_row(form.nom) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.prenom) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                {{ form_row(form.mobile) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.email) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                {{ form_row(form.plainPassword.first) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.plainPassword.second) }}
+            </div>
+        </div>
+        <a href="{{ path('acecommerce_condition') }}">{{ form_row(form.termsAccepted) }}</a>
+        {{ form_end(form) }}
+    </section>
+
+{% endblock %}

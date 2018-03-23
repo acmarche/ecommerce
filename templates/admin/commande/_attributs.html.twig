@@ -1,0 +1,13 @@
+{% for attribut in commandeProduit.attributs %}
+    <tr>
+        <td> </td>
+        <td>{{ attribut }}</td>
+        <td>
+            {% if attribut.prixPromoHtva %}
+                {{ attribut | attributPrixPromoTvac(commandeProduit.produit) }} €
+            {% elseif attribut.prixHtva  %}
+                {{ attribut | attributPrixTvac(commandeProduit.produit) }} €
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

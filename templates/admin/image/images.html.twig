@@ -1,0 +1,23 @@
+{{ form_start(form_delete) }}
+{{ form_errors(form_delete) }}
+{{ form_row(form_delete.submit) }}
+
+{% for image in images %}
+    <div class="float-left center-block" style="margin: 10px; outline: 1px #28ff3d solid;">
+        <p class="text-center">
+            <label>
+                <input type="checkbox" name="imgs[]" value="{{ image.id }}"/>
+            </label>
+        </p>
+        {% if type == 'categorie' %}
+            {% set url = resolveImageCategorie( object, image) %}
+        {% else %}
+            {% set url = resolveImageProduit( object, image) %}
+        {% endif %}
+        <a href="{{ url }}" title="{{ image.name }}" data-gallery>
+            <img src="{{ url | imagine_filter('acecommerce_categorie_thumb') }}" alt="img" class="img-thumbnail"/>
+        </a>
+
+    </div>
+{% endfor %}
+{{ form_end(form_delete) }}

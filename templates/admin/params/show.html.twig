@@ -1,0 +1,15 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+     <div class="page-header">
+        <h3>{{ categorie }}</h3>
+    </div>
+
+    {% include 'admin/categorie/actions.html.twig' with {'entity': categorie } %}
+
+    {% include 'admin/produit/listes.html.twig' with {'produits': categorie.produits} %}
+
+    {% include 'admin/categorie/delete.html.twig' with {'entity': categorie } %}
+
+{% endblock %}

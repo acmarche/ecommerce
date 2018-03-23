@@ -1,0 +1,19 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h3>{{ commande }}</h3>
+    </div>
+
+    {% include 'admin/commande/_actions.html.twig' %}
+
+    {% include 'admin/commande/_detail.html.twig' %}
+
+    {% include 'admin/commande/_produits.html.twig' with {'commandeProduits': commande.commandeProduits} %}
+
+    {% include 'admin/commande/_paiement_details.html.twig' %}
+
+    {% include 'admin/commande/_delete.html.twig' %}
+
+{% endblock %}

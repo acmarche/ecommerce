@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>Desactivate</source>
+                <target>Inactif</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Image file	</source>
+                <target>Image</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>Save and create new</source>
+                <target>Sauver et ajouter un autre</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>alert.warning</source>
+                <target>Attention</target>
+            </trans-unit>
+	    <trans-unit id="5">
+                <source>alert.info</source>
+                <target>Information</target>
+            </trans-unit>
+	    <trans-unit id="6">
+                <source>alert.danger</source>
+                <target>Attention</target>
+            </trans-unit><trans-unit id="7">
+                <source>alert.success</source>
+                <target>Confirmation</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>alert.primary</source>
+                <target>Primary</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>Repeat Password</source>
+                <target>Répéter le mot de passe</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>Plain password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+           <trans-unit id="12">
+                <source>Username</source>
+                <target>Nom d'utilisateur</target>
+            </trans-unit>
+	    <trans-unit id="13">
+                <source>Required</source>
+                <target>Requis</target>
+            </trans-unit>
+	    <trans-unit id="14">
+                <source>Save</source>
+                <target>Sauvegarder</target>
+            </trans-unit>
+	    <trans-unit id="15">
+                <source>Update</source>
+                <target>Mettre à jour</target>
+            </trans-unit>
+	    <trans-unit id="16">
+                <source>Create</source>
+                <target>Ajouter</target>
+            </trans-unit>
+	    <trans-unit id="17">
+                <source>Terms accepted</source>
+                <target>J'accepete les conditions</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

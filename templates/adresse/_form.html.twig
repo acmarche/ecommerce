@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+{{ form_errors(form) }}
+{{ form_row(form.nom) }}
+<div class="form-row">
+    <div class="col">
+        {{ form_row(form.rue) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.numero) }}
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="col">
+        {{ form_row(form.codePostal) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.localite) }}
+    </div>
+</div>
+{{ form_end(form) }}

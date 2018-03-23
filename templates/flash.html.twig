@@ -1,0 +1,13 @@
+{% set flashes = app.flashes %}
+
+{% if flashes | length > 0 %}
+    {% for label, messages in flashes %}
+        <div class="alert alert-{{ label }}" role="alert">
+            <h4 class="alert-heading">{{ ('alert.'~label) | trans }}</h4>
+            <hr>
+            {% for message in messages %}
+                <p class="mb-0">    {{ message }} </p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endif %}

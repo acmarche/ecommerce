@@ -1,0 +1,15 @@
+{{ form_start(form, { 'attr': {'class': 'form-inline'}}) }}
+{{ form_errors(form) }}
+<div class="form-row align-items-center">
+    <div class="col-auto my-1">
+        <label class="sr-only" for="inlineFormInputName">Mot clef</label>
+        {{ form_widget(form.motclef) }}
+    </div>
+    <div class="col-auto my-1">
+        <label class="sr-only" for="inlineFormInputGroupUsername">Commerce</label>
+            {{ form_widget(form.commerce) }}
+    </div>
+    {{ form_row(form.submit) }}
+</div>
+{{ form_end(form) }}
+<br/>

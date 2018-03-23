@@ -1,0 +1,42 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% form_theme form_listing 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block body %}
+
+    <h3>Ajouter un listing pour {{ commerce }}</h3>
+
+    {{ form_start(form_listing,{'attr': {'class': 'form-i2nline'}}) }}
+
+    {{ form_row(form_listing.nom) }}
+
+    <hr/>
+    <h5>Attributs</h5>
+
+    <ul class="list-group"
+        data-prototype="{{ form_widget(form_listing.attributs.vars.prototype)|e('html_attr') }}">
+        {% for attribut in form_listing.attributs %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(attribut.nom) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(attribut.prix.htva) }}
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <button type="submit" class="btn btn-primary mt-4">Ajouter</button>
+    {{ form_end(form_listing) }}
+    <br/><br/>
+
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    <a href="{{ path('acecommerce_admin_listing') }}">Annuler</a>
+
+{% endblock %}
+{% block scripts %}
+    {% include 'admin/listing/_javascripts.html.twig' %}
+{% endblock %}

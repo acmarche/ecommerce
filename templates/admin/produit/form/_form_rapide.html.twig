@@ -1,0 +1,42 @@
+{{ form_start(form) }}
+{{ form_errors(form) }}
+<div class="form-row">
+    <div class="col">
+        {{ form_row(form.nom) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.categorie) }}
+    </div>
+</div>
+
+<hr/>
+<div class="form-row">
+    <div class="col">
+        {{ form_row(form.prix.htva) }}
+    </div>
+    <div class="col">
+        {{ form_row(form.quantite.stock) }}
+    </div>
+</div>
+
+{{ form_row(form.description) }}
+
+{% if produit.isFood %}
+    <div class="form-group">
+        <label class="control-label">Ingrédients</label>
+        <hr/>
+
+        <div id="produit_ingredients">
+            <table class="table table-bordered">
+                {% for row in form.ingredients|batch(2) %}
+                    <tr>
+                        {% for column in row %}
+                            <td>{{ form_widget(column) }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endif %}
+{{ form_end(form) }}

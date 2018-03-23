@@ -1,0 +1,46 @@
+<h4 class="text-success">Liste des produits commandés</h4>
+
+{% if commandeProduits | length > 0 %}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for commandeProduit in commandeProduits %}
+            {% set produit = commandeProduit.produit %}
+            <tr>
+                <td><a href="{{ path('acecommerce_admin_produit_show', { 'id': produit.id }) }}"> {{ produit }}</a></td>
+                <td>{{ commandeProduit.quantite }}</td>
+                <td>{{ produit | prixTvac | number_format }} €</td>
+            </tr>
+            {% include 'admin/commande/_attributs.html.twig' %}
+        {% endfor %}
+        <tr>
+            <td><strong>Total Htva</strong></td>
+            <td></td>
+            <td>{{ cout.totalHtva|number_format }} €</td>
+        </tr>
+        <tr>
+            <td><strong>Total attributs Htva</strong></td>
+            <td></td>
+            <td>{{ cout.attributsHtva }} €</td>
+        </tr>
+        <tr>
+            <td><strong>Montant Tva</strong></td>
+            <td></td>
+            <td>{{ cout.montantTva|number_format }} €</td>
+        </tr>
+        <tr>
+            <td><strong>Total</strong></td>
+            <td></td>
+            <td>{{ cout.aPayer|number_format }} €</td>
+        </tr>
+        </tbody>
+    </table>
+{% else %}
+    <p>Aucun</p>
+{% endif %}

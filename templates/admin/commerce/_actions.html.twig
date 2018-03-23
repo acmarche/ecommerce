@@ -1,0 +1,38 @@
+{% if is_granted('ROLE_ECOMMERCE_COMMERCE') %}
+
+    <a href="{{ path('acecommerce_admin_commerce_index') }}" class="btn btn-primary" role="button"><i
+                class="fas fa-list"></i>
+        Retour à la liste</a>
+
+    <a href="{{ path('acecommerce_admin_commerce_edit', { 'id': commerce.id }) }}" class="btn btn-primary"
+       role="button"><i class="far fa-edit"></i> Editer</a>
+
+    <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Ajouter un produit
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item"
+               href="{{ path('acecommerce_admin_produit_new', { 'commerce': commerce.id }) }}">classique</a>
+            <a class="dropdown-item"
+               href="{{ path('acecommerce_admin_produit_new', { 'commerce': commerce.id, 'food': true }) }}">de
+                lunch</a>
+        </div>
+    </div>
+
+    <a href="{{ path('acecommerce_admin_listing_new', { 'id': commerce.id }) }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-plus"></i> Ajouter un listing</a>
+
+    <a href="{{ path('acecommerce_admin_supplement_new', { 'commerce': commerce.id }) }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-plus"></i> Ajouter un supplément</a>
+
+    <a href="{{ path('acecommerce_admin_ingredient_new', { 'commerce': commerce.id }) }}" class="btn btn-primary"
+       role="button"><i
+                class="fas fa-plus"></i> Ajouter un ingrédient</a>
+
+    <br/>
+    <br/>
+{% endif %}
