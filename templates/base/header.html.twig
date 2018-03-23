@@ -8,10 +8,7 @@
     <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample05">
         <ul class="navbar-nav mr-auto2">
             {% include 'base/top_bar.html.twig' %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('acecommerce_contact') }}">
-                    <i class="fa fa-envelope"></i> Contact</a>
-            </li>
+
         </ul>
         <form class="form-inline my-2 my-md-0" action="{{ path('acecommerce_produit_index') }}" method="get">
             <input class="form-control" type="text" name="motclef" placeholder="Rechercher">

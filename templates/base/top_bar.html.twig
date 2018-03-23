@@ -9,6 +9,10 @@
     <a class="nav-link{% if action == 'acecommerce_commerce_index' %} active{% endif %}"
        href="{{ path('acecommerce_commerce_index') }}">Commerçants</a>
 </li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ path('acecommerce_contact') }}">
+        <i class="fa fa-envelope"></i> Contact</a>
+</li>
 {% if app.user %}
     <li class="nav-item">
         <a class="nav-link" href="{{ path('acecommerce_panier') }}">
@@ -20,7 +24,7 @@
         <div class="dropdown-menu" aria-labelledby="dropdown05">
             <a class="dropdown-item" href="{{ path('acecommerce_utilisateur_show') }}">Mon compte</a>
             {% if is_granted('ROLE_ECOMMERCE_ADMIN') or is_granted('ROLE_ECOMMERCE_COMMERCE') or is_granted('ROLE_ECOMMERCE_LOGISTICIEN') %}
-                <a class="dropdown-item" href="#">Administration</a>
+                <a class="dropdown-item" href="{{ path('acecommerce_admin_home') }}">Administration</a>
             {% endif %}
             <a class="dropdown-item" href="{{ path('logout') }}">Se déconnecter</a>
         </div>
