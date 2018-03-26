@@ -9,6 +9,7 @@ import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import { FormGroup, FormControlLabel, FormControl,FormHelperText } from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 const styles = theme => ({
     card: {
@@ -30,6 +31,25 @@ const styles = theme => ({
 
     }
 });
+
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: '#e3f2fd',
+            main: '#2196f3',
+            dark: '#1976d2',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#fbbcd0',
+            main: '#f50057',
+            dark: '#c51162',
+            contrastText: '#fff',
+        },
+    },
+});
+
 
 class LoginForm extends React.Component {
 
@@ -83,12 +103,11 @@ class LoginForm extends React.Component {
     render(){
         const { classes } = this.props;
         return (
-            <div >
+            <MuiThemeProvider theme={theme}>
+                <div >
                 <Card>
                     <CardContent>
                         <form method="post" className={classes.card} onSubmit={this.handleSubmit}>
-
-
                             <TextField
                                 color="secondary"
                                 name="_username"
@@ -114,14 +133,15 @@ class LoginForm extends React.Component {
                                 onChange={this.handleChange('password')}
                                 margin="normal"/>
 
-                            <Button variant="raised" color="secondary" className={classes.buttonRaised} type="submit">
+                            <Button variant="raised" color='primary' className={classes.buttonRaised} type="submit">
                                 Connexion
                             </Button>
-                            <Button className={classes.button} color="secondary">Mot de passe oublié ?</Button>
+                            <Button className={classes.button} color="primary">Mot de passe oublié ?</Button>
                         </form>
                     </CardContent>
                 </Card>
             </div>
+            </MuiThemeProvider>
         );
     }
 }

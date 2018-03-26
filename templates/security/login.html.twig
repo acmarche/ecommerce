@@ -13,30 +13,13 @@
         </h2>
     </div>
 
+    <div class="d-flex justify-content-center" id="login"></div>
+
     {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <script src="{{ asset("build/js/loginApp.js") }}"
+                error='{{ error.messageKey|trans(error.messageData, 'security') }}'></script>
+    {% else %}
+        <script src="{{ asset("build/js/loginApp.js") }}"></script>
     {% endif %}
-
-    <div class="card card-container">
-        <form class="form-signin" action="{{ path('login') }}" method="post">
-
-            <input type="email" id="email" name="_username" value="{{ last_username }}" class="form-control"
-                   placeholder="Adresse mail" required="required" autofocus>
-            <input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe"
-                   required="required">
-            <div id="remember" class="checkbox">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
-            <button class="btn btn-primary btn-block btn-signin" type="submit">Se connecter</button>
-        </form>
-        <!-- /form -->
-        <br /><br />
-        <a role="button" href="#!" data-toggle="modal" data-target="#exampleModal">
-            Mot de passe oublié ?
-        </a>
-        {% include 'security/_modal_lost.html.twig' %}
-    </div><!-- /card-container -->
 
 {% endblock %}
