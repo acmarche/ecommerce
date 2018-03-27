@@ -49,6 +49,12 @@ abstract class BaseCommandeProduit
     protected $prixHtva;
 
     /**
+     * Ajouté pour REACT.JS (éviter d'appeler le filter twig)
+     * N'existe pas en BD, donc pas d'annotation ORM
+     */
+    protected $prixTvac;
+
+    /**
      * Pour sauvegarde
      *
      * @var string
@@ -217,6 +223,28 @@ abstract class BaseCommandeProduit
     public function setLivre(bool $livre): void
     {
         $this->livre = $livre;
+    }
+
+    /**
+     * Set prixHtva
+     *
+     * @param string $prixHtva
+     *
+     * @return CommandeProduitInterface
+     */
+    public function setPrixTvac($prixTvac)
+    {
+        $this->prixTvac = $prixTvac;
+    }
+
+    /**
+     * Get prixHtva
+     *
+     * @return string
+     */
+    public function getPrixTvac()
+    {
+        return $this->prixTvac;
     }
 
 }

@@ -7,13 +7,14 @@
  */
 
 namespace App\Entity\Commande;
+use JsonSerializable;
 
 /**
  * Couts PAR COMMANDE
  * Class CommandeCout
  * @package App\Entity\Commande
  */
-class CommandeCout
+class CommandeCout implements JsonSerializable
 {
     /**
      *
@@ -184,4 +185,24 @@ class CommandeCout
         $this->attributsHtva = $attributsHtva;
     }
 
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return[
+            'montantTva'=>$this->getMontantTva(),
+            'totalHtva'=>$this->getTotalHtva(),
+            'totalTvac'=>$this->getTotalTvac(),
+            'fraisTransaction'=>$this->getFraisTransaction(),
+            'a_payer'=>$this->getAPayer(),
+            'total_in_cents'=>$this->getTotalInCents(),
+            'attributsTvac'=>$this->getAttributsTvac(),
+            'attributsHtva'=>$this->getAttributsHtva()
+        ];
+    }
 }

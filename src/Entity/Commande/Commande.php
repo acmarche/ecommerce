@@ -103,6 +103,7 @@ class Commande extends BaseCommande implements CommandeInterface, JsonSerializab
             'id' => $this->getId(),
             'commerce' => $this->getCommerce(),
             'produits' => $arrayProduits,
+            'cout' => $this->getCout()
         ];
     }
 }

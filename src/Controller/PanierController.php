@@ -51,7 +51,8 @@ class PanierController extends AbstractController
      */
     public function index(
         Request $request,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        TvaService $tvaService
     ) {
         $ruptures = $indisponibles = $commandes = null;
 
@@ -73,6 +74,11 @@ class PanierController extends AbstractController
 
         $this->commandeCoutService->bindCouts($commandes);
 
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
         $json = json_encode($commandes);
 
         return [
@@ -172,6 +178,47 @@ class PanierController extends AbstractController
     }
 
     /**
+     * Update depuis le panier
+     *
+     * @Route("/updateJSON/", name="acecommerce_panier_update_json")
+     * @Method("POST")
+     *
+     * @return JsonResponse
+     */
+    public function updateJson(Request $request, CommandeProduitRepository $commandeProduitRepository,TvaService $tvaService)
+    {
+        $quantite = intval($request->request->get('quantiteProduit'));
+
+        $commandeProduitId = intval($request->request->get('idCommandeProduit'));
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+        $this->denyAccessUnlessGranted('edit', $commandeProduit, "Vous n'avez pas accès a cette commande.");
+
+        $attributs = $request->request->get('attributs', []);
+
+        try {
+            $this->panierManager->updateProduit($commandeProduit, $quantite, $attributs);
+        } catch (\Exception $exception) {
+            return new JsonResponse(['data' => ['error' => $exception->getMessage()]]);
+        }
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
+    }
+
+    /**
      *
      * @Route("/delete", name="acecommerce_panier_produit_delete")
      * @Method("DELETE")
@@ -201,6 +248,33 @@ class PanierController extends AbstractController
         }
 
         return $this->redirectToRoute('acecommerce_panier');
+    }
+
+    /**
+     *
+     * @Route("/deleteJSON", name="acecommerce_panier_produit_delete")
+     * @Method("DELETE")
+     * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
+     */
+    public function deleteJSON(Request $request, CommandeProduitRepository $commandeProduitRepository)
+    {
+        $commandeProduitId = $request->request->get('commandeProduit');
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+
+        if (!$commandeProduit) {
+
+            //TODO : return infos concernant la suppression si erreur
+            return new JsonResponse([
+                "message"=>"Objet CommandeProduit non trouvé"
+            ]);
+        }
+
+        $form = $this->createDeleteForm();
+        $form->handleRequest($request);
+        $this->panierManager->removeProduit($commandeProduit);
+        return new JsonResponse([
+            "message"=>"OK"
+        ]);
     }
 
     /**

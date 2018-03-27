@@ -1,13 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
-import Table, { TableBody, TableCell, TableHead, TableRow,TableFooter } from 'material-ui/Table';
-import Paper from 'material-ui/Paper';
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import {updateQuantity,setupInitial,deleteItem} from '../actions/actionsPanier'; //Import your actions
+
+import Table, { TableBody,
+    TableCell,
+    TableHead,
+    TableRow,TableFooter }      from 'material-ui/Table';
+import { withStyles }           from 'material-ui/styles';
+import Typography               from 'material-ui/Typography';
+import Paper                    from 'material-ui/Paper';
+import Button                   from 'material-ui/Button';
+import TextField                from 'material-ui/TextField';
+import { CircularProgress }     from 'material-ui/Progress';
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle, }              from 'material-ui/Dialog';
+
+import {updateQuantity,setupInitial,deletePendingItem,
+    handleCloseModalDelete,handleShowModalDelete} from '../actions/actionsPanier'; //Import your actions
 import * as FontAwesome from 'react-icons/lib/fa';
 
 const styles = theme => ({
@@ -21,6 +33,7 @@ const styles = theme => ({
     cellName:{
         borderBottom:'none',
         alignItems:'end',
+
     },
     cellQuantity:{
         borderBottom:'none',
@@ -33,7 +46,17 @@ const styles = theme => ({
     cellPrice:{
         borderBottom:'none',
         alignItems:'end',
-    }
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
+    paper: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+    },
 });
 
 class Screen extends React.Component {
@@ -55,7 +78,7 @@ class Screen extends React.Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.products.map(commande => {
+                        {this.props.orders.map(commande => {
                             return (
                                 <TableRow key={commande.commerce.nom}>
                                     <TableCell>{commande.commerce.nom}</TableCell>
@@ -84,10 +107,10 @@ class Screen extends React.Component {
                                                                 onChange={this.props.updateQuantity.bind(null,produit)}/>
                                                         </TableCell>
                                                         <TableCell className={classes.cellPrice}>
-                                                            {produit.prix}
+                                                            {produit.prix.toFixed(2) + "€"}
                                                         </TableCell>
                                                         <TableCell className={classes.cellDelete}>
-                                                            <Button color="primary" className={classes.button} onClick={this.props.deleteItem.bind(null,produit)}>
+                                                            <Button color="primary" className={classes.button} onClick={() => this.props.handleShowModalDelete(produit)}>
                                                                 <FontAwesome.FaTrash/>
                                                             </Button>
                                                         </TableCell>
@@ -96,14 +119,53 @@ class Screen extends React.Component {
                                             </Table>
                                         ))}
                                     </TableCell>
-                                    <TableCell>{commande.total}</TableCell>
+                                    {this.showProgressOrTotal(commande)}
                                 </TableRow>
                             );
                         })}
                     </TableBody>
                 </Table>
+
+                <Dialog
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    open={this.props.showModalDelete}
+                    onClose={this.props.handleCloseModalDelete}>
+
+                    <DialogTitle id="alert-dialog-title">{"Supprimer l'article ?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Cette action est irréversible
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.props.handleCloseModalDelete} color="primary" autoFocus>
+                            Annuler
+                        </Button>
+                        <Button onClick={this.props.deletePendingItem} color="primary">
+                            Supprimer
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
             </Paper>
         );
+    }
+
+    showProgressOrTotal(order){
+        if(!order.showCircularProgress){
+            return(
+                <TableCell>{order.cout.totalTvac.toFixed(2) + "€"}</TableCell>
+            );
+        }
+        else {
+            return(
+                <TableCell>
+                    <CircularProgress/>
+                </TableCell>
+            );
+
+        }
     }
 
     componentDidMount(){
@@ -115,11 +177,23 @@ Screen.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
+function getModalStyle() {
+    const top = 50;
+    const left = 50;
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`,
+    };
+}
+
 const mapStateToProps = (state, own) => {
     return {
         ...own,
         loading: state.loading,
-        products: state.products
+        orders: state.orders,
+        showModalDelete: state.showModalDelete
     }
 };
 
@@ -128,7 +202,9 @@ function mapDispatchToProps(dispatch,own) {
         ...own,
         updateQuantity: (evt,newValue) => dispatch(updateQuantity(newValue,evt)),
         setupInitial: (initial) => dispatch(setupInitial(initial)),
-        deleteItem:(item,evt) => dispatch(deleteItem(item))
+        deletePendingItem:() => dispatch(deletePendingItem()),
+        handleCloseModalDelete:()=>dispatch(handleCloseModalDelete()),
+        handleShowModalDelete:(product)=>dispatch(handleShowModalDelete(product))
     }
 }
 

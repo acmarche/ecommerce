@@ -53,6 +53,8 @@ class CommandeProduit extends BaseCommandeProduit implements CommandeProduitInte
      */
     protected $supplements;
 
+
+
     public function __construct()
     {
         $this->attributs = new ArrayCollection();
@@ -136,7 +138,10 @@ class CommandeProduit extends BaseCommandeProduit implements CommandeProduitInte
             'id' => $this->getId(),
             'nom' =>$this->getProduit()->getNom(),
             'quantite' =>$this->getQuantite(),
-            'prix' => round($this->getPrixHtva(),2)
+            'prixTvac' => $this->getPrixTvac(),
+            'idCommande' => $this->getCommande()->getId()
         ];
     }
+
+
 }
