@@ -1,6 +1,7 @@
 import store from '../store/store'; //Import the store
 
-export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
+export const PENDING_UPDATE = 'PENDING_UPDATE';
+export const PENDING_DELETE = 'PENDING_DELETE';
 export const SETUP_INITIAL = 'SETUP_INITIAL';
 export const CANCEL = 'CANCEL';
 export const DELETE_ITEM = 'DELETE_ITEM';
@@ -8,6 +9,7 @@ export const SHOW_CIRCULAR_PROGRESS = 'CIRCULAR';
 export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const HANDLE_CLOSE_MODAL_DELETE = 'HANDLE_CLOSE_MODAL_DELETE';
 export const HANDLE_SHOW_MODAL_DELETE = 'HANDLE_SHOW_MODAL_DELETE';
+export const TOGGLE_EXPAND_ITEM_ATTRIBUTES = 'TOGGLE_EXPAND_ITEM_ATTRIBUTES';
 /*
 
 product :
@@ -22,7 +24,7 @@ product :
 export const updateQuantity = (evt,product) => {
     return(dispatch) =>{
         let newQuantity = evt.target.value;
-        if (!isNumericPositive(newQuantity) || store.getState().loading) {
+        if (!isNumericPositive(newQuantity) || store.getState().loading || newQuantity < 0) {
             // alphabet letters found or currently loading
             return{
                 'type':CANCEL
@@ -64,7 +66,15 @@ export const updateQuantity = (evt,product) => {
 
 export const whileFetchingUpdate = (product) =>{
     return {
-        'type':UPDATE_QUANTITY,
+        'type':PENDING_UPDATE,
+        'payload':product
+    }
+};
+
+
+export const whileFetchingDelete = (product) =>{
+    return {
+        'type':PENDING_DELETE,
         'payload':product
     }
 };
@@ -90,30 +100,33 @@ function isNumericPositive(n) {
 
 export const deletePendingItem = () => {
 
-    let params = {
-        'commandeProduit': store.getState().itemPendingDelete.id
-    };
-    let esc = encodeURIComponent;
-    let body = Object.keys(params)
-        .map(k => esc(k) + '=' + esc(params[k]))
-        .join('&');
+    return(dispatch) =>{
+        let product = store.getState().itemPendingDelete;
+        let params = {
+            'commandeProduit': product.id
+        };
+        let esc = encodeURIComponent;
+        let body = Object.keys(params)
+            .map(k => esc(k) + '=' + esc(params[k]))
+            .join('&');
 
-    let request = {
-        method: 'DELETE',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        },
-        credentials: 'include',
-        body: body
-    };
+        let request = {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            },
+            credentials: 'include',
+            body: body
+        };
 
-    fetch('http://localhost:8000/panier/deleteJSON',request)
-        .catch((error) => {
-            console.error("Error with FETCH : " + error);
-        });
-    return {
-        'type':DELETE_ITEM,
+        fetch('http://localhost:8000/panier/deleteJSON',request)
+            .then ((response) => response.json())
+            .then ((json) => dispatch(onItemsUpdated(JSON.parse(json.orders),product.idCommande)))
+            .catch((error) => {
+                console.error("Error with FETCH : " + error);
+            });
+        dispatch(whileFetchingDelete(product))
     }
 };
 
@@ -145,6 +158,13 @@ export const handleShowModalDelete = (itemPendingDelete) =>{
     return {
         type:HANDLE_SHOW_MODAL_DELETE,
         payload:itemPendingDelete
+    }
+};
+
+export const toggleExpandItemAttributes = (product) =>{
+    return{
+        type:TOGGLE_EXPAND_ITEM_ATTRIBUTES,
+        payload:product
     }
 };
 

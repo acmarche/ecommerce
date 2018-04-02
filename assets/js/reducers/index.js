@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import {UPDATE_QUANTITY, SETUP_INITIAL, CANCEL,
+import {PENDING_UPDATE, SETUP_INITIAL, CANCEL, PENDING_DELETE,TOGGLE_EXPAND_ITEM_ATTRIBUTES,
     DELETE_ITEM, UPDATE_ORDER,HANDLE_CLOSE_MODAL_DELETE,HANDLE_SHOW_MODAL_DELETE} from "../actions/actionsPanier"
 
 let dataState = { orders: [], loading:false,showModalDelete: false };
@@ -10,11 +10,19 @@ const panierReducer = (state = dataState, action) => {
 
         //  Will temporarily change the item quantity while the API is requested asynchronously(in action)
         // A circular progress is shown
-        case UPDATE_QUANTITY:
+        case PENDING_UPDATE:
             return {
                 ...state,
                 loading: true,
                 orders:updateItem(state.orders,action.payload),
+            };
+
+        case PENDING_DELETE:
+            return {
+                ...state,
+                loading: false,
+                showModalDelete:false,
+                orders:removeItem(updateItem(state.orders,action.payload),action.payload)
             };
 
         //The fetch request is done, update total and remove circular icon
@@ -28,7 +36,17 @@ const panierReducer = (state = dataState, action) => {
         case SETUP_INITIAL:
             return {
                 ...state,
-                orders:action.payload
+                orders:action.payload.map((item) => {
+                    return{
+                        ...item,
+                        produits:item.produits.map((produit) => {
+                            return{
+                                ...produit,
+                                expanded:false
+                            }
+                        })
+                    }
+                })
             };
 
         case DELETE_ITEM:
@@ -53,6 +71,27 @@ const panierReducer = (state = dataState, action) => {
 
         case CANCEL:
             return state;
+
+        case TOGGLE_EXPAND_ITEM_ATTRIBUTES:
+            return {
+                ...state,
+                orders:state.orders.map((item) => {
+                    return{
+                        ...item,
+                        produits:item.produits.map((produit) => {
+                            if(produit.id === action.payload.id){
+                                return{
+                                    ...produit,
+                                    expanded: !produit.expanded
+                                }
+                            }
+                            return{
+                                ...produit,
+                            }
+                        })
+                    }
+                })
+            };
 
         default:
             return state;
@@ -87,7 +126,10 @@ function updateItem(array,itemToUpdate){
 }
 
 function updateOrderTotal(orders, newOrders, idOrderToUpdate){
-    return orders.map((order,index) => {
+    if(idOrderToUpdate === undefined){ //Update all orders
+        return newOrders;
+    }
+    return orders.map((order) => {    //Only update order with ID = idOrderToUpdate
         if(order.id === idOrderToUpdate){
             order.showCircularProgress = false;
             order.cout = newOrders.filter(item => item.id === idOrderToUpdate)[0].cout;
@@ -104,7 +146,7 @@ function removeItem(array, itemToRemove) {
             ...item,
             produits : item.produits.filter((item, index) => item.id !== itemToRemove.id)
         }
-    //Purge array from shops with no orders
+        //Purge array from shops with no orders
     }).filter((item,index) => item.produits.length > 0);
 }
 

@@ -256,7 +256,7 @@ class PanierController extends AbstractController
      * @Method("DELETE")
      * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
      */
-    public function deleteJSON(Request $request, CommandeProduitRepository $commandeProduitRepository)
+    public function deleteJSON(Request $request, CommandeProduitRepository $commandeProduitRepository, TvaService $tvaService)
     {
         $commandeProduitId = $request->request->get('commandeProduit');
         $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
@@ -272,9 +272,22 @@ class PanierController extends AbstractController
         $form = $this->createDeleteForm();
         $form->handleRequest($request);
         $this->panierManager->removeProduit($commandeProduit);
-        return new JsonResponse([
-            "message"=>"OK"
-        ]);
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
     }
 
     /**

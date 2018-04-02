@@ -9,6 +9,16 @@ import Table, { TableBody,
 import { withStyles }           from 'material-ui/styles';
 import Typography               from 'material-ui/Typography';
 import Paper                    from 'material-ui/Paper';
+import List,{ ListItem,
+    ListItemIcon,
+    ListItemText }              from 'material-ui/List';
+import Divider                  from 'material-ui/Divider';
+import TrashIcon                from 'material-ui-icons/Delete';
+import DraftsIcon               from 'material-ui-icons/Drafts';
+import Collapse                 from 'material-ui/transitions/Collapse';
+import ExpandLess               from 'material-ui-icons/ExpandLess';
+import Remove                   from 'material-ui-icons/Remove';
+import ExpandMore               from 'material-ui-icons/ExpandMore';
 import Button                   from 'material-ui/Button';
 import TextField                from 'material-ui/TextField';
 import { CircularProgress }     from 'material-ui/Progress';
@@ -18,7 +28,7 @@ import Dialog, {
     DialogContentText,
     DialogTitle, }              from 'material-ui/Dialog';
 
-import {updateQuantity,setupInitial,deletePendingItem,
+import {updateQuantity,setupInitial,deletePendingItem,toggleExpandItemAttributes,
     handleCloseModalDelete,handleShowModalDelete} from '../actions/actionsPanier'; //Import your actions
 import * as FontAwesome from 'react-icons/lib/fa';
 
@@ -31,17 +41,15 @@ const styles = theme => ({
         overflow: 'hidden',
     },
     cellName:{
-        borderBottom:'none',
-        alignItems:'end',
-
+        width:180
     },
     cellQuantity:{
         borderBottom:'none',
         alignItems:'end',
     },
     cellDelete:{
-        borderBottom:'none',
-        alignItems:'end',
+        width:60,
+        height:60
     },
     cellPrice:{
         borderBottom:'none',
@@ -57,6 +65,18 @@ const styles = theme => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
     },
+    list :{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems:'center',
+        padding: 0,
+    },
+    listProduit :{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems:'center',
+        padding: 0,
+    }
 });
 
 class Screen extends React.Component {
@@ -84,39 +104,50 @@ class Screen extends React.Component {
                                     <TableCell>{commande.commerce.nom}</TableCell>
                                     <TableCell>
                                         {commande.produits.map(produit => (
-                                            <Table key={produit.id}>
-                                                <TableHead style={{borderBottom:'none'}}>
-                                                    <TableRow style={{height:0}}>
-                                                        <TableCell numeric style={{flex:1,borderBottom:'none',width:150,flexWrap:'wrap'}}/>
-                                                        <TableCell numeric style={{flex:1,borderBottom:'none',width:200,flexWrap:'wrap'}}/>
-                                                        <TableCell numeric style={{flex:1,borderBottom:'none',width:7,paddingRight:0,flexWrap:'wrap'}}/>
-                                                        <TableCell numeric style={{flex:1,borderBottom:'none',width:7,flexWrap:'wrap'}}/>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    <TableRow>
-                                                        <TableCell className={classes.cellName}>
-                                                            {produit.nom}
-                                                        </TableCell>
-                                                        <TableCell className={classes.cellQuantity}>
-                                                            <TextField
-                                                                id="quantite"
-                                                                label="Quantité"
-                                                                value={produit.quantite}
-                                                                type="number"
-                                                                onChange={this.props.updateQuantity.bind(null,produit)}/>
-                                                        </TableCell>
-                                                        <TableCell className={classes.cellPrice}>
-                                                            {produit.prix.toFixed(2) + "€"}
-                                                        </TableCell>
-                                                        <TableCell className={classes.cellDelete}>
-                                                            <Button color="primary" className={classes.button} onClick={() => this.props.handleShowModalDelete(produit)}>
-                                                                <FontAwesome.FaTrash/>
-                                                            </Button>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                </TableBody>
-                                            </Table>
+                                            <List className={classes.list} key={produit.id}>
+                                                <ListItem className={classes.listProduit}>
+                                                    <div>
+                                                        <ListItemText secondary={produit.nom} className={classes.cellName}/>
+                                                        <Collapse in={produit.expanded} timeout="auto" unmountOnExit>
+                                                            <List dense={true} disablePadding>
+                                                                {produit.attributs.map((attribut) =>{
+                                                                    return(
+                                                                        <ListItem>
+                                                                            <ListItemText
+                                                                                secondary={attribut.nom}/>
+                                                                        </ListItem>
+                                                                    )
+                                                                })}
+                                                            </List>
+                                                        </Collapse>
+                                                    </div>
+                                                    <ListItem button onClick={() => {this.props.toggleExpandItemAttributes(produit)}}>
+                                                        {produit.attributs.length > 0 ?
+                                                            produit.expanded ?
+                                                                <ExpandLess /> : <ExpandMore />
+                                                            :<Remove/>
+                                                        }
+                                                    </ListItem>
+
+                                                </ListItem>
+
+                                                <ListItem>
+                                                    <TextField
+                                                        id="quantite"
+                                                        label="Quantité"
+                                                        value={produit.quantite}
+                                                        type="number"
+                                                        onChange={this.props.updateQuantity.bind(null,produit)}/>
+                                                </ListItem>
+
+                                                <ListItem>
+                                                    <ListItemText primary={produit.prix.toFixed(2) + "€"}/>
+                                                </ListItem>
+
+                                                <ListItem button onClick={() => this.props.handleShowModalDelete(produit)} color="primary" className={classes.cellDelete}>
+                                                    <FontAwesome.FaTrash/>
+                                                </ListItem>
+                                            </List>
                                         ))}
                                     </TableCell>
                                     {this.showProgressOrTotal(commande)}
@@ -204,7 +235,8 @@ function mapDispatchToProps(dispatch,own) {
         setupInitial: (initial) => dispatch(setupInitial(initial)),
         deletePendingItem:() => dispatch(deletePendingItem()),
         handleCloseModalDelete:()=>dispatch(handleCloseModalDelete()),
-        handleShowModalDelete:(product)=>dispatch(handleShowModalDelete(product))
+        handleShowModalDelete:(product)=>dispatch(handleShowModalDelete(product)),
+        toggleExpandItemAttributes:(product)=>dispatch(toggleExpandItemAttributes(product))
     }
 }
 
