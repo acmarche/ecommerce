@@ -2,7 +2,13 @@ import { combineReducers } from 'redux';
 import {PENDING_UPDATE, SETUP_INITIAL, CANCEL, PENDING_DELETE,TOGGLE_EXPAND_ITEM_ATTRIBUTES,
     DELETE_ITEM, UPDATE_ORDER,HANDLE_CLOSE_MODAL_DELETE,HANDLE_SHOW_MODAL_DELETE} from "../actions/actionsPanier"
 
-let dataState = { orders: [], loading:false,showModalDelete: false };
+let dataState = {
+    orders: [],
+    loading:false,
+    showModalDelete: false,
+    totalWithStripe:0,
+    grandTotal:0
+};
 
 const panierReducer = (state = dataState, action) => {
 
@@ -34,19 +40,29 @@ const panierReducer = (state = dataState, action) => {
             };
 
         case SETUP_INITIAL:
-            return {
+            let totalFraisTransaction = 0;
+            let grandTotal = 0;
+            let res = {
                 ...state,
-                orders:action.payload.map((item) => {
+                orders:action.payload.map((order) => {
+                    totalFraisTransaction += order.cout.fraisTransaction;
+                    grandTotal += order.cout.totalTvac;
+
                     return{
-                        ...item,
-                        produits:item.produits.map((produit) => {
+                        ...order,
+                        produits:order.produits.map((produit) => {
                             return{
                                 ...produit,
                                 expanded:false
                             }
                         })
                     }
-                })
+                }),
+            };
+            return {
+                ...res,
+                totalWithStripe: totalFraisTransaction,
+                grandTotal: grandTotal + totalFraisTransaction,
             };
 
         case DELETE_ITEM:

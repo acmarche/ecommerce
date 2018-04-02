@@ -43,17 +43,9 @@ const styles = theme => ({
     cellName:{
         width:180
     },
-    cellQuantity:{
-        borderBottom:'none',
-        alignItems:'end',
-    },
     cellDelete:{
         width:60,
         height:60
-    },
-    cellPrice:{
-        borderBottom:'none',
-        alignItems:'end',
     },
     progress: {
         margin: theme.spacing.unit * 2,
@@ -76,6 +68,12 @@ const styles = theme => ({
         flexDirection: 'row',
         alignItems:'center',
         padding: 0,
+    },
+    cellStripeTotal:{
+        fontSize:'12pt'
+    },
+    cellGrandTotal:{
+        fontSize:'19pt'
     }
 });
 
@@ -112,7 +110,7 @@ class Screen extends React.Component {
                                                             <List dense={true} disablePadding>
                                                                 {produit.attributs.map((attribut) =>{
                                                                     return(
-                                                                        <ListItem>
+                                                                        <ListItem key={attribut.id}>
                                                                             <ListItemText
                                                                                 secondary={attribut.nom}/>
                                                                         </ListItem>
@@ -154,6 +152,17 @@ class Screen extends React.Component {
                                 </TableRow>
                             );
                         })}
+                        <TableRow>
+                            <TableCell className={classes.cellStripeTotal}>Frais de transport et Stripe</TableCell>
+                            <TableCell className={classes.cellStripeTotal}/>
+                            <TableCell className={classes.cellStripeTotal}>{this.props.totalWithStripe.toFixed(2) + '€'}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className={classes.cellGrandTotal}>Total à payer</TableCell>
+                            <TableCell className={classes.cellGrandTotal}/>
+                            <TableCell className={classes.cellGrandTotal}>{this.props.grandTotal.toFixed(2) + "€"}</TableCell>
+                        </TableRow>
+
                     </TableBody>
                 </Table>
 
@@ -224,7 +233,9 @@ const mapStateToProps = (state, own) => {
         ...own,
         loading: state.loading,
         orders: state.orders,
-        showModalDelete: state.showModalDelete
+        showModalDelete: state.showModalDelete,
+        totalWithStripe:state.totalWithStripe,
+        grandTotal:state.grandTotal
     }
 };
 
