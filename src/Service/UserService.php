@@ -26,6 +26,7 @@ class UserService
     public function getCurrentUser()
     {
         $token = $this->tokenStorage->getToken();
+        $user = false;
         if ($token) {
             $user = $token->getUser();
             //a cause anonyme user
