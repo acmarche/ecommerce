@@ -27,10 +27,11 @@ import Dialog, {
     DialogContent,
     DialogContentText,
     DialogTitle, }              from 'material-ui/Dialog';
-
 import {updateQuantity,setupInitial,deletePendingItem,toggleExpandItemAttributes,
-    handleCloseModalDelete,handleShowModalDelete} from '../actions/actionsPanier'; //Import your actions
-import * as FontAwesome from 'react-icons/lib/fa';
+    handleCloseModalDelete,handleShowModalDelete,deleteAttribut} from '../actions/actionsPanier'; //Import your actions
+import * as FontAwesome         from 'react-icons/lib/fa';
+import IconButton               from "material-ui/es/IconButton/IconButton";
+import ListItemSecondaryAction  from "material-ui/es/List/ListItemSecondaryAction";
 
 const styles = theme => ({
     root: {
@@ -46,6 +47,9 @@ const styles = theme => ({
     cellDelete:{
         width:60,
         height:60
+    },
+    cellTotalOrder:{
+        width:200
     },
     progress: {
         margin: theme.spacing.unit * 2,
@@ -74,6 +78,16 @@ const styles = theme => ({
     },
     cellGrandTotal:{
         fontSize:'19pt'
+    },
+    attribut:{
+        display: 'flex',
+        alignItems:'end'
+    },
+    attributName:{
+        width:180
+    },
+    iconAttributDelete:{
+        width:15
     }
 });
 
@@ -107,12 +121,16 @@ class Screen extends React.Component {
                                                     <div>
                                                         <ListItemText secondary={produit.nom} className={classes.cellName}/>
                                                         <Collapse in={produit.expanded} timeout="auto" unmountOnExit>
-                                                            <List dense={true} disablePadding>
+                                                            <List dense={true}>
                                                                 {produit.attributs.map((attribut) =>{
                                                                     return(
                                                                         <ListItem key={attribut.id}>
-                                                                            <ListItemText
-                                                                                secondary={attribut.nom}/>
+                                                                            <ListItemText secondary={attribut.nom} className={classes.attributName}/>
+                                                                            <ListItemSecondaryAction onClick={() => this.props.deleteAttribut(produit,attribut)}>
+                                                                                <IconButton>
+                                                                                    <FontAwesome.FaMinusCircle  className={classes.iconAttributDelete}/>
+                                                                                </IconButton>
+                                                                            </ListItemSecondaryAction>
                                                                         </ListItem>
                                                                     )
                                                                 })}
@@ -148,19 +166,25 @@ class Screen extends React.Component {
                                             </List>
                                         ))}
                                     </TableCell>
-                                    {this.showProgressOrTotal(commande)}
+                                    <TableCell className={classes.cellTotalOrder}>
+                                        {commande.showCircularProgress ? <CircularProgress/> : commande.cout.totalTvac.toFixed(2) + "€"}
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}
                         <TableRow>
                             <TableCell className={classes.cellStripeTotal}>Frais de transport et Stripe</TableCell>
                             <TableCell className={classes.cellStripeTotal}/>
-                            <TableCell className={classes.cellStripeTotal}>{this.props.totalWithStripe.toFixed(2) + '€'}</TableCell>
+                            <TableCell className={classes.cellStripeTotal}>
+                                {this.props.loading ? <CircularProgress/> : this.props.totalWithStripe.toFixed(2) + "€" }
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className={classes.cellGrandTotal}>Total à payer</TableCell>
                             <TableCell className={classes.cellGrandTotal}/>
-                            <TableCell className={classes.cellGrandTotal}>{this.props.grandTotal.toFixed(2) + "€"}</TableCell>
+                            <TableCell className={classes.cellGrandTotal}>
+                                {this.props.loading ? <CircularProgress/> : this.props.grandTotal.toFixed(2) + "€" }
+                            </TableCell>
                         </TableRow>
 
                     </TableBody>
@@ -190,22 +214,6 @@ class Screen extends React.Component {
 
             </Paper>
         );
-    }
-
-    showProgressOrTotal(order){
-        if(!order.showCircularProgress){
-            return(
-                <TableCell>{order.cout.totalTvac.toFixed(2) + "€"}</TableCell>
-            );
-        }
-        else {
-            return(
-                <TableCell>
-                    <CircularProgress/>
-                </TableCell>
-            );
-
-        }
     }
 
     componentDidMount(){
@@ -245,6 +253,7 @@ function mapDispatchToProps(dispatch,own) {
         updateQuantity: (evt,newValue) => dispatch(updateQuantity(newValue,evt)),
         setupInitial: (initial) => dispatch(setupInitial(initial)),
         deletePendingItem:() => dispatch(deletePendingItem()),
+        deleteAttribut:(product,attr) => dispatch(deleteAttribut(product,attr)),
         handleCloseModalDelete:()=>dispatch(handleCloseModalDelete()),
         handleShowModalDelete:(product)=>dispatch(handleShowModalDelete(product)),
         toggleExpandItemAttributes:(product)=>dispatch(toggleExpandItemAttributes(product))

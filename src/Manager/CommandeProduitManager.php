@@ -68,6 +68,12 @@ class CommandeProduitManager extends AbstractManager
         $this->flush();
     }
 
+    public function updateCommandeProduit(CommandeProduitInterface $commandeProduit)
+    {
+        $this->persist($commandeProduit);
+        $this->flush();
+    }
+
     /**
      * @param ProduitInterface $produit
      * @param User $user

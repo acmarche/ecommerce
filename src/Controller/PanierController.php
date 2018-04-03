@@ -7,6 +7,7 @@ use App\Event\PanierEvent;
 use App\Form\Commande\CommandeProduitType;
 use App\Manager\CommandeProduitManager;
 use App\Manager\PanierManager;
+use App\Repository\Attribut\AttributRepository;
 use App\Repository\Commande\CommandeProduitRepository;
 use App\Service\CommandeCoutService;
 use App\Service\RequestService;
@@ -258,20 +259,55 @@ class PanierController extends AbstractController
      */
     public function deleteJSON(Request $request, CommandeProduitRepository $commandeProduitRepository, TvaService $tvaService)
     {
+        //TODO sécuriser form avec $form->isSubmitted() && $form->isValid()
+
         $commandeProduitId = $request->request->get('commandeProduit');
         $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
 
         if (!$commandeProduit) {
-
-            //TODO : return infos concernant la suppression si erreur
-            return new JsonResponse([
-                "message"=>"Objet CommandeProduit non trouvé"
-            ]);
+            return $this->redirectToRoute('acecommerce_panier');
         }
 
-        $form = $this->createDeleteForm();
-        $form->handleRequest($request);
         $this->panierManager->removeProduit($commandeProduit);
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
+    }
+
+    /**
+     *
+     * @Route("/deleteAttributJSON", name="acecommerce_panier_produit_delete_attribute_json")
+     * @Method("DELETE")
+     * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
+     */
+    public function deleteAttributJSON(Request $request, CommandeProduitRepository $commandeProduitRepository,
+                                       AttributRepository $attributRepository,TvaService $tvaService){
+        //TODO sécuriser form avec $form->isSubmitted() && $form->isValid()
+
+        $commandeProduitId = $request->request->get('commandeProduit');
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+
+        $attributId = $request->request->get('attributId');
+        $attribut = $attributRepository->find($attributId);
+
+        if (!$commandeProduit) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+
+        $this->panierManager->removeAttribut($commandeProduit,$attribut);
 
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);
@@ -321,6 +357,41 @@ class PanierController extends AbstractController
         }
 
         return $this->redirectToRoute('acecommerce_panier');
+    }
+
+    /**
+     *
+     * @Route("/commentaireJSON", name="acecommerce_panier_produit_commentaire")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
+     */
+    public function commentaireJSON(Request $request, CommandeProduitRepository $commandeProduitRepository, TvaService $tvaService)
+    {
+        $commandeProduitId = $request->request->get('commandeProduit');
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+
+        if (!$commandeProduit) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+        $commentaire = $request->request->get('commentaire');
+
+        $this->panierManager->commentaireProduit($commandeProduit, $commentaire);
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
     }
 
     /**

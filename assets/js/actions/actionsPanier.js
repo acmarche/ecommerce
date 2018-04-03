@@ -10,6 +10,8 @@ export const UPDATE_ORDER = 'UPDATE_ORDER';
 export const HANDLE_CLOSE_MODAL_DELETE = 'HANDLE_CLOSE_MODAL_DELETE';
 export const HANDLE_SHOW_MODAL_DELETE = 'HANDLE_SHOW_MODAL_DELETE';
 export const TOGGLE_EXPAND_ITEM_ATTRIBUTES = 'TOGGLE_EXPAND_ITEM_ATTRIBUTES';
+export const DELETE_ATTRIBUT = 'DELETE_ATTRIBUT';
+export const PENDING_DELETE_ATTRIBUT = 'PENDING_DELETE_ATTRIBUT';
 /*
 
 product :
@@ -71,11 +73,20 @@ export const whileFetchingUpdate = (product) =>{
     }
 };
 
-
 export const whileFetchingDelete = (product) =>{
     return {
         'type':PENDING_DELETE,
         'payload':product
+    }
+};
+
+export const whileFetchingDeleteAttribute = (product,attribute) => {
+    return{
+        type:PENDING_DELETE_ATTRIBUT,
+        payload:{
+            product:product,
+            attribute:attribute
+        }
     }
 };
 
@@ -127,6 +138,40 @@ export const deletePendingItem = () => {
                 console.error("Error with FETCH : " + error);
             });
         dispatch(whileFetchingDelete(product))
+    }
+};
+
+export const deleteAttribut = (product,attribute) => {
+    return(dispatch) =>{
+        let params = {
+            commandeProduit: product.id,
+            attributId:attribute.id,
+        };
+
+        let esc = encodeURIComponent;
+        let body = Object.keys(params)
+            .map(k => esc(k) + '=' + esc(params[k]))
+            .join('&');
+
+        let request = {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            },
+            credentials: 'include',
+            body: body
+        };
+
+        console.log("started fetch");
+        fetch('http://localhost:8000/panier/deleteAttributJSON',request)
+            .then ((response) => response.json())
+            .then ((json) => dispatch(onItemsUpdated(JSON.parse(json.orders),product.idCommande)))
+            .catch((error) => {
+                console.error("Error with FETCH : " + error);
+            });
+
+        dispatch(whileFetchingDeleteAttribute(product,attribute));
     }
 };
 

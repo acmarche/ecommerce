@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import {PENDING_UPDATE, SETUP_INITIAL, CANCEL, PENDING_DELETE,TOGGLE_EXPAND_ITEM_ATTRIBUTES,
-    DELETE_ITEM, UPDATE_ORDER,HANDLE_CLOSE_MODAL_DELETE,HANDLE_SHOW_MODAL_DELETE} from "../actions/actionsPanier"
+    DELETE_ITEM, UPDATE_ORDER,HANDLE_CLOSE_MODAL_DELETE,HANDLE_SHOW_MODAL_DELETE,
+    DELETE_ATTRIBUT,PENDING_DELETE_ATTRIBUT} from "../actions/actionsPanier"
 
 let dataState = {
     orders: [],
@@ -20,15 +21,22 @@ const panierReducer = (state = dataState, action) => {
             return {
                 ...state,
                 loading: true,
-                orders:updateItem(state.orders,action.payload),
+                orders:updateItem(state.orders,action.payload,true),
             };
 
         case PENDING_DELETE:
             return {
                 ...state,
-                loading: false,
+                loading: true,
                 showModalDelete:false,
-                orders:removeItem(updateItem(state.orders,action.payload),action.payload)
+                orders:removeItem(updateItem(state.orders,action.payload),action.payload,true)
+            };
+
+        case PENDING_DELETE_ATTRIBUT:
+            return {
+                ...state,
+                loading:true,
+                orders:removeAttribute(state.orders,action.payload.attribute,true)
             };
 
         //The fetch request is done, update total and remove circular icon
@@ -36,18 +44,17 @@ const panierReducer = (state = dataState, action) => {
             return {
                 ...state,
                 loading: false,
-                orders:updateOrderTotal(state.orders,action.payload.newOrders, action.payload.idOrderToUpdate)
+                orders:updateOrderTotal(state.orders,action.payload.newOrders, action.payload.idOrderToUpdate),
+                totalWithStripe:computeStripeTotal(state),
+                grandTotal:computeGrandTotal(state)
             };
 
         case SETUP_INITIAL:
-            let totalFraisTransaction = 0;
-            let grandTotal = 0;
-            let res = {
+            return {
                 ...state,
+                totalWithStripe: computeStripeTotal({orders:action.payload}),
+                grandTotal: computeGrandTotal({orders:action.payload}),
                 orders:action.payload.map((order) => {
-                    totalFraisTransaction += order.cout.fraisTransaction;
-                    grandTotal += order.cout.totalTvac;
-
                     return{
                         ...order,
                         produits:order.produits.map((produit) => {
@@ -58,11 +65,6 @@ const panierReducer = (state = dataState, action) => {
                         })
                     }
                 }),
-            };
-            return {
-                ...res,
-                totalWithStripe: totalFraisTransaction,
-                grandTotal: grandTotal + totalFraisTransaction,
             };
 
         case DELETE_ITEM:
@@ -114,7 +116,7 @@ const panierReducer = (state = dataState, action) => {
     }
 };
 
-function updateItem(array,itemToUpdate){
+function updateItem(array,itemToUpdate,showCircularProgress){
     return array.map((item, index) => {
         return {
             ...item,
@@ -131,7 +133,7 @@ function updateItem(array,itemToUpdate){
 
             // Otherwise, this is the one we want
             // set the circular progress of the order visible
-            order.showCircularProgress = true;
+            order.showCircularProgress = showCircularProgress;
             // and return an updated value
             return {
                 ...item,
@@ -164,6 +166,40 @@ function removeItem(array, itemToRemove) {
         }
         //Purge array from shops with no orders
     }).filter((item,index) => item.produits.length > 0);
+}
+
+function removeAttribute(orders, attributeToRemove, showCircularProgress){
+    return orders.map((order) => {
+        return {
+            ...order,
+            produits:order.produits.map((produit) => {
+                console.log(produit.attributs);
+                console.log(attributeToRemove);
+                console.log(produit.attributs.filter((attribute) => attribute.id !== attributeToRemove.id));
+                return{
+                    ...produit,
+                    attributs:produit.attributs.filter((attribute) => attribute.id !== attributeToRemove.id)
+                }
+            })
+        };
+    });
+}
+
+function computeGrandTotal(state){
+    let grandTotal = 0;
+    state.orders.map((order) => {
+        grandTotal += order.cout.totalTvac;
+        return order;
+    });
+    return grandTotal + computeStripeTotal(state);
+}
+
+function computeStripeTotal(state){
+    let totalFraisTransaction = 0;
+    state.orders.map((order) => {
+        totalFraisTransaction += order.cout.fraisTransaction;
+    });
+    return totalFraisTransaction;
 }
 
 // Combine all the reducers
