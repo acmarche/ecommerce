@@ -11,7 +11,8 @@ namespace App\Service;
 use App\Entity\Commerce\Commerce;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 class Bottin
 {
@@ -21,14 +22,15 @@ class Bottin
     private $baseUrl;
     private $cache;
 
-    public function __construct($url, $user, $password)
+    public function __construct($url, $user, $password, AdapterInterface $cacheAdapter)
     {
         $this->baseUrl = $url;
 
         $this->user = $user;
         $this->password = $password;
-        //todo as service
-        $this->cache = new FilesystemCache();
+
+        //todo in 4.1 Psr\SimpleCache\CacheInterface
+        $this->cache = $cacheAdapter;
 
         $http_options = [
             'timeout' => 10,
@@ -37,32 +39,42 @@ class Bottin
         $this->client = new Client($http_options);
     }
 
+    /**
+     * @return mixed
+     * @throws InvalidArgumentException
+     */
     public function getFiches()
     {
         $url = "/fiches";
-        $key = 'bottin.allfiche';
+        $key = md5('bottin.allfiche');
 
-        if (!$this->cache->has($key)) {
+        $item = $this->cache->getItem($key);
+        if ($item->isHit()) {
             $data = $this->request("GET", $url);
-
-            $this->cache->set($key, $data);
+            $item->set($data);
+            $this->cache->save($item);
         }
 
-        return $this->cache->get($key);
+        return $item->get();
     }
 
+    /**
+     * @return mixed
+     * @throws InvalidArgumentException
+     */
     public function getFiche($ficheId)
     {
         $url = "/fiche/".$ficheId;
-        $key = 'bottin.fiche.'.$ficheId;
+        $key = md5('bottin.fiche.'.$ficheId);
 
-        if (!$this->cache->has($key)) {
+        $item = $this->cache->getItem($key);
+        if ($item->isHit()) {
             $data = $this->request("GET", $url);
-
-            $this->cache->set($key, $data);
+            $item->set($data);
+            $this->cache->save($item);
         }
 
-        return $this->cache->get($key);
+        return $item->get();
     }
 
     public function getHoraire($ficheId)
