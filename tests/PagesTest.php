@@ -7,30 +7,28 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PagesTest extends WebTestCase
 {
-    private $urls;
-
-
-    public function testSomething()
+    /**
+     * @dataProvider urlProvider
+     */
+    public function testPageIsSuccessful($url)
     {
-        $urls = [
-            '/',
-            '/produits/',
-            '/categories/',
-            '/commerces/',
-            '/contact',
-            '/doc/paiement',
-            '/doc/dgpr',
-            '/doc/condition',
-            '/doc/livraison',
-        ];
-        $client = static::createClient();
-        foreach ($urls as $url) {
-            $client->request('GET', $url);
-            //print_r($client->getResponse()->getContent());
+        $client = self::createClient();
+        $client->request('GET', $url);
 
-            $this->assertEquals(200, $client->getResponse()->getStatusCode(), $url);
-        }
+        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
+    public function urlProvider()
+    {
+        yield ['/'];
+        yield ['/produits'];
+        yield ['/categories/'];
+        yield ['/commerces/'];
+        yield ['/contact'];
+        yield ['/doc/paiement'];
+        yield ['/doc/dgpr'];
+        yield ['/doc/condition'];
+        yield ['/doc/livraison'];
+    }
 
 }
