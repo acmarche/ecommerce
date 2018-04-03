@@ -109,6 +109,24 @@ interface CommandeProduitInterface
     public function getPrixHtva();
 
     /**
+     * Set prixTvac
+     *
+     * @param string $prixHtva
+     *
+     * @return CommandeProduitInterface
+     */
+    public function setPrixTvac($prixHtva);
+
+    /**
+     * Get prixTvac
+     *
+     * @return string
+     */
+    public function getPrixTvac();
+
+
+
+    /**
      * Set tvaApplique
      *
      * @param string $tvaApplique

@@ -9,11 +9,12 @@ use App\Entity\TraitDef\PrixTrait;
 use App\Entity\TraitDef\QuantiteTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Attribut\AttributRepository")
  */
-class Attribut implements AttributInterface
+class Attribut implements AttributInterface, JsonSerializable
 {
     use PrixTrait;
     use QuantiteTrait;
@@ -156,4 +157,25 @@ class Attribut implements AttributInterface
         return $this->getPrixHtva();
     }
 
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'nom' =>$this->getNom(),
+            'prixHtva' =>$this->getPrixHtva(),
+            'prix' => $this->getPrix(),
+            'quantite' => $this->getQuantite(),
+            'listingAttributs' => $this->getListingAttributs(),
+            'valeur' => $this->getValeur(),
+            'prixPromoHtva' => $this->getPrixPromoHtva(),
+            'prixApplique' => $this->getPrixApplique()
+        ];
+    }
 }

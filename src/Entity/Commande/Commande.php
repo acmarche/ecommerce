@@ -94,6 +94,8 @@ class Commande extends BaseCommande implements CommandeInterface, JsonSerializab
 
     public function jsonSerialize()
     {
+        //Les collections Doctrines sont chargées de manière lazy,
+        //Une array est créée pour sérialiser les objets de manière forcée
         $arrayProduits = array();
         foreach ($this->getCommandeProduits() as $produit) {
             array_push($arrayProduits, $produit);
@@ -103,6 +105,7 @@ class Commande extends BaseCommande implements CommandeInterface, JsonSerializab
             'id' => $this->getId(),
             'commerce' => $this->getCommerce(),
             'produits' => $arrayProduits,
+            'cout' => $this->getCout()
         ];
     }
 }
