@@ -140,7 +140,7 @@ class PanierController extends AbstractController
      *
      * @Route("/update/", name="acecommerce_panier_update")
      * @Method("POST")
-     *
+     * todo add token
      * @return JsonResponse
      */
     public function update(Request $request, CommandeProduitRepository $commandeProduitRepository)
