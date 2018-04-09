@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DownShift from './downShiftAttributes'
 import { connect } from 'react-redux';
 
 import Table, { TableBody,
@@ -115,31 +116,33 @@ class Screen extends React.Component {
                                 <TableRow key={commande.commerce.nom}>
                                     <TableCell>{commande.commerce.nom}</TableCell>
                                     <TableCell>
-                                        {commande.produits.map(produit => (
-                                            <List className={classes.list} key={produit.id}>
+                                        {commande.commandeProduits.map(commandeProduit => (
+                                            <List className={classes.list} key={commandeProduit.id}>
                                                 <ListItem className={classes.listProduit}>
                                                     <div>
-                                                        <ListItemText secondary={produit.nom} className={classes.cellName}/>
-                                                        <Collapse in={produit.expanded} timeout="auto" unmountOnExit>
-                                                            <List dense={true}>
-                                                                {produit.attributs.map((attribut) =>{
-                                                                    return(
-                                                                        <ListItem key={attribut.id}>
-                                                                            <ListItemText secondary={attribut.nom} className={classes.attributName}/>
-                                                                            <ListItemSecondaryAction onClick={() => this.props.deleteAttribut(produit,attribut)}>
-                                                                                <IconButton>
-                                                                                    <FontAwesome.FaMinusCircle  className={classes.iconAttributDelete}/>
-                                                                                </IconButton>
-                                                                            </ListItemSecondaryAction>
-                                                                        </ListItem>
+                                                        <ListItemText secondary={commandeProduit.produit.nom} className={classes.cellName}/>
+                                                        <Collapse in={commandeProduit.expanded} timeout="auto" unmountOnExit>
+                                                            {
+                                                                commandeProduit.produit.produitListingAttributs.map(listingAttribut => {
+                                                                    return (
+                                                                        <DownShift
+                                                                            key={listingAttribut.id}
+                                                                            identifier={listingAttribut.id}
+                                                                            commandeProduit={commandeProduit}
+                                                                            label={listingAttribut.listingAttributs.nom}
+                                                                            suggestions={listingAttribut.listingAttributs.attributs}
+                                                                            //Seulement les attributs qui font partie du listing à afficher
+                                                                            selection={commandeProduit.attributs.filter((attr) => attr.listingAttributId === listingAttribut.listingAttributs.id)}/>
                                                                     )
                                                                 })}
-                                                            </List>
+                                                            <div style={{height:180}}>
+
+                                                            </div>
                                                         </Collapse>
                                                     </div>
-                                                    <ListItem button onClick={() => {this.props.toggleExpandItemAttributes(produit)}}>
-                                                        {produit.attributs.length > 0 ?
-                                                            produit.expanded ?
+                                                    <ListItem button onClick={() => {this.props.toggleExpandItemAttributes(commandeProduit)}}>
+                                                        {commandeProduit.produit.produitListingAttributs.length > 0 ?
+                                                            commandeProduit.expanded ?
                                                                 <ExpandLess /> : <ExpandMore />
                                                             :<Remove/>
                                                         }
@@ -151,16 +154,16 @@ class Screen extends React.Component {
                                                     <TextField
                                                         id="quantite"
                                                         label="Quantité"
-                                                        value={produit.quantite}
+                                                        value={commandeProduit.quantite}
                                                         type="number"
-                                                        onChange={this.props.updateQuantity.bind(null,produit)}/>
+                                                        onChange={(evt) => {this.props.updateQuantity(evt,commandeProduit)}}/>
                                                 </ListItem>
 
                                                 <ListItem>
-                                                    <ListItemText primary={produit.prix.toFixed(2) + "€"}/>
+                                                    <ListItemText primary={commandeProduit.prix.toFixed(2) + "€"}/>
                                                 </ListItem>
 
-                                                <ListItem button onClick={() => this.props.handleShowModalDelete(produit)} color="primary" className={classes.cellDelete}>
+                                                <ListItem button onClick={() => this.props.handleShowModalDelete(commandeProduit)} color="primary" className={classes.cellDelete}>
                                                     <FontAwesome.FaTrash/>
                                                 </ListItem>
                                             </List>
@@ -187,9 +190,9 @@ class Screen extends React.Component {
                             </TableCell>
                         </TableRow>
 
+
                     </TableBody>
                 </Table>
-
                 <Dialog
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
@@ -211,7 +214,6 @@ class Screen extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
             </Paper>
         );
     }
@@ -220,6 +222,8 @@ class Screen extends React.Component {
         this.props.setupInitial(this.props.panier);
     }
 }
+
+
 
 Screen.propTypes = {
     classes: PropTypes.object.isRequired,
@@ -239,24 +243,24 @@ function getModalStyle() {
 const mapStateToProps = (state, own) => {
     return {
         ...own,
-        loading: state.loading,
-        orders: state.orders,
-        showModalDelete: state.showModalDelete,
-        totalWithStripe:state.totalWithStripe,
-        grandTotal:state.grandTotal
+        loading: state.panierReducer.loading,
+        orders: state.panierReducer.orders,
+        showModalDelete: state.panierReducer.showModalDelete,
+        totalWithStripe:state.panierReducer.totalWithStripe,
+        grandTotal:state.panierReducer.grandTotal
     }
 };
 
 function mapDispatchToProps(dispatch,own) {
     return {
         ...own,
-        updateQuantity: (evt,newValue) => dispatch(updateQuantity(newValue,evt)),
+        updateQuantity: (evt,newValue) => dispatch(updateQuantity(evt,newValue)),
         setupInitial: (initial) => dispatch(setupInitial(initial)),
         deletePendingItem:() => dispatch(deletePendingItem()),
         deleteAttribut:(product,attr) => dispatch(deleteAttribut(product,attr)),
         handleCloseModalDelete:()=>dispatch(handleCloseModalDelete()),
         handleShowModalDelete:(product)=>dispatch(handleShowModalDelete(product)),
-        toggleExpandItemAttributes:(product)=>dispatch(toggleExpandItemAttributes(product))
+        toggleExpandItemAttributes:(product)=>dispatch(toggleExpandItemAttributes(product)),
     }
 }
 

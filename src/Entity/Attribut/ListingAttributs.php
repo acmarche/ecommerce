@@ -13,11 +13,12 @@ use App\Entity\InterfaceDef\ListingAttributsInterface;
 use App\Entity\TraitDef\CommerceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Attribut\ListingAttributsRepository")
  */
-class ListingAttributs implements ListingAttributsInterface
+class ListingAttributs implements ListingAttributsInterface, JsonSerializable
 {
     use CommerceTrait;
 
@@ -35,7 +36,7 @@ class ListingAttributs implements ListingAttributsInterface
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Attribut\Attribut", mappedBy="listingAttributs", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Attribut\Attribut",  fetch="EXTRA_LAZY", mappedBy="listingAttributs", cascade={"persist","remove"})
      * @var Attribut[]
      */
     private $attributs;
@@ -125,4 +126,26 @@ class ListingAttributs implements ListingAttributsInterface
     }
 
 
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        //Les collections Doctrines sont chargées de manière lazy,
+        //Une array est créée pour sérialiser les objets de manière forcée
+        $arrayAttributs = array();
+        foreach ($this->getAttributs() as $attribut) {
+            array_push($arrayAttributs, $attribut);
+        }
+
+        return[
+            'id'=>$this->getId(),
+            'nom'=>$this->getNom(),
+            'attributs'=>$arrayAttributs
+        ];
+    }
 }

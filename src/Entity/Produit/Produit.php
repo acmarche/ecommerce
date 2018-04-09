@@ -248,10 +248,17 @@ class Produit extends BaseProduit implements ProduitInterface, JsonSerializable
 
     public function jsonSerialize()
     {
+        //Les collections Doctrines sont chargées de manière lazy,
+        //Une array est créée pour sérialiser les objets de manière forcée
+        $arrayAttributs = array();
+        foreach ($this->getProduitListingsAttributs() as $attribut) {
+            array_push($arrayAttributs, $attribut);
+        }
+
         return[
-            'produit'=>[
-                'nom' =>json_encode($this->nom)
-            ]
+            'id'=>$this->getId(),
+            'nom' =>$this->getNom(),
+            'produitListingAttributs' => $arrayAttributs
         ];
     }
 }

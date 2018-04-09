@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait ProduitListingAttributTrait
 {
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Attribut\ProduitListingAttribut", mappedBy="produit", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Attribut\ProduitListingAttribut",fetch="EAGER", mappedBy="produit", cascade={"remove"})
      * @var ProduitListingAttribut[]
      */
     private $produitListingsAttributs;

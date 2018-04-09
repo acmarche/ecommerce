@@ -12,6 +12,9 @@ export const HANDLE_SHOW_MODAL_DELETE = 'HANDLE_SHOW_MODAL_DELETE';
 export const TOGGLE_EXPAND_ITEM_ATTRIBUTES = 'TOGGLE_EXPAND_ITEM_ATTRIBUTES';
 export const DELETE_ATTRIBUT = 'DELETE_ATTRIBUT';
 export const PENDING_DELETE_ATTRIBUT = 'PENDING_DELETE_ATTRIBUT';
+
+export const DOWNSHIFT_KEYDOWN = 'DOWNSHIFT_KEYDOWN';
+
 /*
 
 product :
@@ -26,7 +29,7 @@ product :
 export const updateQuantity = (evt,product) => {
     return(dispatch) =>{
         let newQuantity = evt.target.value;
-        if (!isNumericPositive(newQuantity) || store.getState().loading || newQuantity < 0) {
+        if (!isNumericPositive(newQuantity) || store.getState().panierReducer.loading || newQuantity <= 0) {
             // alphabet letters found or currently loading
             return{
                 'type':CANCEL
@@ -38,22 +41,7 @@ export const updateQuantity = (evt,product) => {
             quantiteProduit:newQuantity,
         };
 
-        let esc = encodeURIComponent;
-        let body = Object.keys(params)
-            .map(k => esc(k) + '=' + esc(params[k]))
-            .join('&');
-
-        let request = {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            },
-            credentials: 'include',
-            body: body
-        };
-
-        console.log("started fetch");
+        let request = prepareRequest(params,"POST");
         fetch('http://localhost:8000/panier/updateJSON/',request)
             .then ((response) => response.json())
             .then ((json) => dispatch(onItemsUpdated(JSON.parse(json.orders),product.idCommande)))
@@ -112,25 +100,12 @@ function isNumericPositive(n) {
 export const deletePendingItem = () => {
 
     return(dispatch) =>{
-        let product = store.getState().itemPendingDelete;
+        let product = store.getState().panierReducer.itemPendingDelete;
         let params = {
             'commandeProduit': product.id
         };
-        let esc = encodeURIComponent;
-        let body = Object.keys(params)
-            .map(k => esc(k) + '=' + esc(params[k]))
-            .join('&');
 
-        let request = {
-            method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            },
-            credentials: 'include',
-            body: body
-        };
-
+        let request = prepareRequest(params,"DELETE");
         fetch('http://localhost:8000/panier/deleteJSON',request)
             .then ((response) => response.json())
             .then ((json) => dispatch(onItemsUpdated(JSON.parse(json.orders),product.idCommande)))
@@ -141,27 +116,32 @@ export const deletePendingItem = () => {
     }
 };
 
+function prepareRequest(params,method) {
+    let esc = encodeURIComponent;
+    let body = Object.keys(params)
+        .map(k => esc(k) + '=' + esc(params[k]))
+        .join('&');
+
+    let request = {
+        method: method,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+        credentials: 'include',
+        body: body
+    };
+    return request;
+}
+
 export const deleteAttribut = (product,attribute) => {
     return(dispatch) =>{
+
         let params = {
             commandeProduit: product.id,
-            attributId:attribute.id,
+            attributId: attribute.id,
         };
-
-        let esc = encodeURIComponent;
-        let body = Object.keys(params)
-            .map(k => esc(k) + '=' + esc(params[k]))
-            .join('&');
-
-        let request = {
-            method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            },
-            credentials: 'include',
-            body: body
-        };
+        let request = prepareRequest(params,"DELETE");
 
         console.log("started fetch");
         fetch('http://localhost:8000/panier/deleteAttributJSON',request)
@@ -181,7 +161,7 @@ export const setupInitial = (initialState) =>{
         'payload':initialState.map((item,index) => {
             return{
                 ...item,
-                produits : item.produits.map((product,index) => {
+                commandeProduits : item.commandeProduits.map((product,index) => {
                     let totalProduit = product.prixTvac;
                     return{
                         ...product,
@@ -205,6 +185,7 @@ export const handleShowModalDelete = (itemPendingDelete) =>{
         payload:itemPendingDelete
     }
 };
+
 
 export const toggleExpandItemAttributes = (product) =>{
     return{

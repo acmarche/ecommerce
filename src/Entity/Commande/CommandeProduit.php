@@ -134,20 +134,23 @@ class CommandeProduit extends BaseCommandeProduit implements CommandeProduitInte
 
     public function jsonSerialize()
     {
+
         //Les collections Doctrines sont chargées de manière lazy,
         //Une array est créée pour sérialiser les objets de manière forcée
         $arrayAttributs = array();
         foreach ($this->getAttributs() as $attribut) {
             array_push($arrayAttributs, $attribut);
         }
+
         return [
             'id' => $this->getId(),
-            'nom' =>$this->getProduit()->getNom(),
+            'produit' =>$this->getProduit(),
             'quantite' =>$this->getQuantite(),
             'prixTvac' => $this->getPrixTvac(),
             'idCommande' => $this->getCommande()->getId(),
-            'attributs'=>$arrayAttributs
+            'attributs'=> $arrayAttributs
         ];
+
     }
 
 

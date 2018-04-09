@@ -136,4 +136,9 @@ class PanierChecker
         //refresh panier
         return $this->panierManager->getPanierEncours();
     }
+
+    public function checkToAddAttribute($attribut)
+    {
+
+    }
 }

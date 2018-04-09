@@ -15,9 +15,8 @@ trait CommandeProduitTrait
 {
     /**
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Commande\CommandeProduit", mappedBy="commande", cascade={"persist", "remove"},fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Commande\CommandeProduit", mappedBy="commande", cascade={"persist", "remove"})
      *
-     * @MaxDepth(2)
      *
      */
     protected $commande_produits;

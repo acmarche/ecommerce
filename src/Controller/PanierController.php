@@ -8,6 +8,7 @@ use App\Form\Commande\CommandeProduitType;
 use App\Manager\CommandeProduitManager;
 use App\Manager\PanierManager;
 use App\Repository\Attribut\AttributRepository;
+use App\Repository\Attribut\ProduitListingAttributRepository;
 use App\Repository\Commande\CommandeProduitRepository;
 use App\Service\CommandeCoutService;
 use App\Service\RequestService;
@@ -53,7 +54,8 @@ class PanierController extends AbstractController
     public function index(
         Request $request,
         EventDispatcherInterface $eventDispatcher,
-        TvaService $tvaService
+        TvaService $tvaService,
+        ProduitListingAttributRepository $attributRepository
     ) {
         $ruptures = $indisponibles = $commandes = null;
 
@@ -81,6 +83,7 @@ class PanierController extends AbstractController
             }
         }
         $json = json_encode($commandes);
+
 
         return [
             'ruptures' => $ruptures,
@@ -303,11 +306,50 @@ class PanierController extends AbstractController
         $attributId = $request->request->get('attributId');
         $attribut = $attributRepository->find($attributId);
 
-        if (!$commandeProduit) {
+        if (!$commandeProduit || !$attribut) {
             return $this->redirectToRoute('acecommerce_panier');
         }
 
         $this->panierManager->removeAttribut($commandeProduit,$attribut);
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
+    }
+
+    /**
+     *
+     * @Route("/addAttributJSON", name="acecommerce_panier_produit_add_attribute_json")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
+     */
+    public function addAttributJSON(Request $request, CommandeProduitRepository $commandeProduitRepository,
+                                    AttributRepository $attributRepository,TvaService $tvaService){
+        //TODO sécuriser form avec $form->isSubmitted() && $form->isValid()
+
+        $commandeProduitId = $request->request->get('commandeProduit');
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+
+        $attributId = $request->request->get('attributId');
+        $attribut = $attributRepository->find($attributId);
+
+        if (!$commandeProduit || !$attribut) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+
+        $this->panierManager->addAttribut($commandeProduit,$attribut);
 
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);

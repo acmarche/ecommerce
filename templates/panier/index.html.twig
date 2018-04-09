@@ -3,7 +3,10 @@
 {% block body %}
     <h2>Mon panier</h2>
 
-    {% include 'panier/_details.html.twig' %}
+    <div id="detailpanier">
+        <script src="{{ asset("build/js/panierApp.js") }}" panier='{{ json }}'></script>
+    </div>
+
     <br/>
 
     {{ form_start(form_vider) }}
