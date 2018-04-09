@@ -12,7 +12,7 @@ ComponentState:
     selectedItem:[]
 */
 
-export default function panierReducer(state = initialState, action){
+export default function downshiftReducer(state = initialState, action){
     switch(action.type){
         case HANDLE_KEY_DOWN:
             return{
@@ -61,13 +61,14 @@ export default function panierReducer(state = initialState, action){
             };
 
         case HANDLE_DELETE:
+            console.log(action);
             return{
                 ...state,
                 componentStates: state.componentStates.map((componentState) => {
                     if(componentState.id === action.componentKey){
                         return{
                             ...componentState,
-                            selectedItem:componentState.selectedItem.filter((item) => item !== action.item)
+                            selectedItem:componentState.selectedItem.filter((item) => item !== action.attribute)
                         };
                     }
                     return componentState;

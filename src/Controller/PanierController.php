@@ -359,6 +359,7 @@ class PanierController extends AbstractController
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
             }
         }
+
         $json = json_encode($commandes);
 
         return new JsonResponse(

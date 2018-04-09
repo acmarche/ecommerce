@@ -1,6 +1,6 @@
 import {PENDING_UPDATE, SETUP_INITIAL, CANCEL, PENDING_DELETE,TOGGLE_EXPAND_ITEM_ATTRIBUTES,
-    DELETE_ITEM, UPDATE_ORDER,HANDLE_CLOSE_MODAL_DELETE,HANDLE_SHOW_MODAL_DELETE,
-    DELETE_ATTRIBUT,PENDING_DELETE_ATTRIBUT} from "../actions/actionsPanier"
+    DELETE_ITEM, WHEN_ORDER_UPDATED,HANDLE_CLOSE_MODAL_DELETE,HANDLE_SHOW_MODAL_DELETE
+    ,PENDING_DELETE_ATTRIBUT,PENDING_ADD_ATTRIBUT} from "../actions/actionsPanier"
 
 let dataState = {
     orders: [],
@@ -35,11 +35,18 @@ export default function panierReducer(state = dataState, action){
             return {
                 ...state,
                 loading:true,
-                orders:removeAttribute(state.orders,action.payload.attribute,true)
+                orders:removeAttribute(state.orders,action.attribute,true)
+            };
+
+        case PENDING_ADD_ATTRIBUT:
+            return{
+                ...state,
+                loading:true,
+                orders:addAttribute(state,action.produitTarget,action.attribute,true)
             };
 
         //The fetch request is done, update total and remove circular icon
-        case UPDATE_ORDER:
+        case WHEN_ORDER_UPDATED:
             return {
                 ...state,
                 loading: false,
@@ -148,8 +155,17 @@ function updateOrderTotal(orders, newOrders, idOrderToUpdate){
     }
     return orders.map((order) => {    //Only update order with ID = idOrderToUpdate
         if(order.id === idOrderToUpdate){
-            order.showCircularProgress = false;
-            order.cout = newOrders.filter(item => item.id === idOrderToUpdate)[0].cout;
+            return{
+                ...order,
+                showCircularProgress: false,
+                cout: newOrders.filter(item => item.id === idOrderToUpdate)[0].cout,
+                commandeProduits : order.commandeProduits.map((commandeProduit) => {
+                    return {
+                        ...commandeProduit,
+                        showCircularProgress: false
+                    }
+                })
+            }
         }
         return order;
     })
@@ -168,14 +184,40 @@ function removeItem(array, itemToRemove) {
 }
 
 function removeAttribute(orders, attributeToRemove, showCircularProgress){
+    console.log(orders);
+    console.log(attributeToRemove);
+
     return orders.map((order) => {
         return {
             ...order,
             commandeProduits:order.commandeProduits.map((produit) => {
-                return{
-                    ...produit,
-                    attributs:commandeProduits.attributs.filter((attribute) => attribute.id !== attributeToRemove.id)
+                if(produit.attributs.some((attribute) => attribute.id === attributeToRemove.id)){
+                    console.log("found");
+                    return{
+                        ...produit,
+                        showCircularProgress: showCircularProgress,
+                        attributs:produit.attributs.filter((attribute) => attribute.id !== attributeToRemove.id)
+                    }
                 }
+                return produit;
+            })
+        };
+    });
+}
+
+function addAttribute(state,produitTarget, attributeToAdd, showCircularProgress){
+    return state.orders.map((order) => {
+        return {
+            ...order,
+            commandeProduits:order.commandeProduits.map((produit) => {
+                if(produitTarget.id === produit.id){
+                    return{
+                        ...produit,
+                        showCircularProgress: showCircularProgress,
+                        attributs: produit.attributs.concat(attributeToAdd)
+                    }
+                }
+                return produit;
             })
         };
     });

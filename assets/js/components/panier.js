@@ -160,7 +160,11 @@ class Screen extends React.Component {
                                                 </ListItem>
 
                                                 <ListItem>
-                                                    <ListItemText primary={commandeProduit.prix.toFixed(2) + "€"}/>
+                                                    {
+                                                        commandeProduit.showCircularProgress ?
+                                                            <CircularProgress/>:
+                                                            <ListItemText primary={commandeProduit.prix.toFixed(2) + "€"}/>
+                                                    }
                                                 </ListItem>
 
                                                 <ListItem button onClick={() => this.props.handleShowModalDelete(commandeProduit)} color="primary" className={classes.cellDelete}>

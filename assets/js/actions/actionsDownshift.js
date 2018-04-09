@@ -1,11 +1,14 @@
 import keycode from 'keycode'
-import {onItemsUpdated} from "./actionsPanier";
+import {whenItemsUpdated} from "./actionsPanier";
 import store from "../store/store";
 export const HANDLE_KEY_DOWN = 'HANDLE_KEY_DOWN';
 export const HANDLE_CHANGE = 'HANDLE_CHANGE';
 export const HANDLE_CHANGE_INPUT = 'HANDLE_CHANGE_INPUT';
 export const HANDLE_DELETE = 'HANDLE_DELETE';
+
 export const ADD_TO_REDUCER = 'ADD_TO_REDUCER';
+
+import {PENDING_DELETE_ATTRIBUT,PENDING_ADD_ATTRIBUT,CANCEL} from "../actions/actionsPanier"
 
 export const handleKeyDown = (key,evt) => {
     return{
@@ -23,18 +26,60 @@ export const handleInputChange = (key,event) => {
     }
 };
 
-export const handleChange = (key,attribute,order) =>{
-    let params = {
-        'commandeProduit': order.id,
-        'attributId': attribute.id
-    };
-    let request = prepareRequest(params,"POST");
-    fetch('http://localhost:8000/panier/addAttributJSON',request)
-        .then ((response) => response.json())
-        .catch((error) => {
-            console.error("Error with FETCH : " + error);
-        });
+export const handleChange = (key,attribute,commandeProduit) =>{
+    return (dispatch) => {
+        if(store.getState().
+            downshiftReducer.componentStates
+                .filter((component) => component.id === key)[0]
+                    .selectedItem.some((attributeCheck) => attribute.id === attributeCheck.id)){
+            dispatch(cancel());
+            console.log("Canceled,fuck off");
+        }
+        else
+        {
+            let params = {
+                'commandeProduit': commandeProduit.id,
+                'attributId': attribute.id
+            };
+            let request = prepareRequest(params,"POST");
+            fetch('http://localhost:8000/panier/addAttributJSON',request)
+                .then ((response) => response.json())
+                .then((json) => dispatch(whenItemsUpdated(JSON.parse(json.orders),commandeProduit.idCommande)))
+                .catch((error) => {
+                    console.error("Error with FETCH : " + error);
+                });
 
+            dispatch(addAttribute(key,attribute));
+            dispatch(whileAddingAttribute(commandeProduit,attribute))
+        }
+    }
+};
+
+export const cancel= () => {
+    return{
+        type: CANCEL
+    }
+};
+
+export const handleDelete = (key,attribut,commandeProduit) =>{
+    return(dispatch) => {
+        let params = {
+            'commandeProduit': commandeProduit.id,
+            'attributId': attribut.id
+        };
+        let request = prepareRequest(params,"DELETE");
+        fetch('http://localhost:8000/panier/deleteAttributJSON',request)
+            .then ((response) => response.json())
+            .then((json) => dispatch(whenItemsUpdated(JSON.parse(json.orders),commandeProduit.idCommande)))
+            .catch((error) => {
+                console.error("Error with FETCH : " + error);
+            });
+        dispatch(deleteAttribute(key,attribut));
+        dispatch(whileDeletingAttribute(attribut))
+    }
+};
+
+export const addAttribute = (key,attribute) => {
     return{
         type:HANDLE_CHANGE,
         item:attribute,
@@ -42,21 +87,26 @@ export const handleChange = (key,attribute,order) =>{
     }
 };
 
-export const handleDelete = (key,item,commandeProduit) =>{
-    let params = {
-        'commandeProduit': commandeProduit.id,
-        'attributId': item.id
-    };
-    let request = prepareRequest(params,"DELETE");
-    fetch('http://localhost:8000/panier/deleteAttributJSON',request)
-        .then ((response) => response.json())
-        .catch((error) => {
-            console.error("Error with FETCH : " + error);
-        });
+export const deleteAttribute = (key,item) => {
     return{
         type:HANDLE_DELETE,
-        item:item,
-        componentKey: key,
+        attribute:item,
+        componentKey:key,
+    }
+};
+
+export const whileDeletingAttribute = (attribute) => {
+    return{
+        type:PENDING_DELETE_ATTRIBUT,
+        attribute:attribute,
+    }
+};
+
+export const whileAddingAttribute = (target,item) => {
+    return {
+        type:PENDING_ADD_ATTRIBUT,
+        attribute:item,
+        produitTarget:target,
     }
 };
 

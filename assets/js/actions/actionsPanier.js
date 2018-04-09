@@ -6,14 +6,13 @@ export const SETUP_INITIAL = 'SETUP_INITIAL';
 export const CANCEL = 'CANCEL';
 export const DELETE_ITEM = 'DELETE_ITEM';
 export const SHOW_CIRCULAR_PROGRESS = 'CIRCULAR';
-export const UPDATE_ORDER = 'UPDATE_ORDER';
+export const WHEN_ORDER_UPDATED = 'WHEN_ORDER_UPDATED';
 export const HANDLE_CLOSE_MODAL_DELETE = 'HANDLE_CLOSE_MODAL_DELETE';
 export const HANDLE_SHOW_MODAL_DELETE = 'HANDLE_SHOW_MODAL_DELETE';
 export const TOGGLE_EXPAND_ITEM_ATTRIBUTES = 'TOGGLE_EXPAND_ITEM_ATTRIBUTES';
 export const DELETE_ATTRIBUT = 'DELETE_ATTRIBUT';
 export const PENDING_DELETE_ATTRIBUT = 'PENDING_DELETE_ATTRIBUT';
-
-export const DOWNSHIFT_KEYDOWN = 'DOWNSHIFT_KEYDOWN';
+export const PENDING_ADD_ATTRIBUT = "PENDING_ADD_ATTRIBUT";
 
 /*
 
@@ -44,7 +43,7 @@ export const updateQuantity = (evt,product) => {
         let request = prepareRequest(params,"POST");
         fetch('http://localhost:8000/panier/updateJSON/',request)
             .then ((response) => response.json())
-            .then ((json) => dispatch(onItemsUpdated(JSON.parse(json.orders),product.idCommande)))
+            .then ((json) => dispatch(whenItemsUpdated(JSON.parse(json.orders),product.idCommande)))
             .catch((error) => {
                 console.error("Error with FETCH : " + error);
             });
@@ -80,9 +79,9 @@ export const whileFetchingDeleteAttribute = (product,attribute) => {
 
 // Orders = the new state of all the orders sent by the API
 // Product = the product for which the quantity has been updated
-export const onItemsUpdated = (orders,idCommande) =>{
+export const whenItemsUpdated = (orders, idCommande) =>{
     return {
-        'type':UPDATE_ORDER,
+        'type':WHEN_ORDER_UPDATED,
         'payload':{
             newOrders:orders,
             idOrderToUpdate:idCommande
@@ -108,7 +107,7 @@ export const deletePendingItem = () => {
         let request = prepareRequest(params,"DELETE");
         fetch('http://localhost:8000/panier/deleteJSON',request)
             .then ((response) => response.json())
-            .then ((json) => dispatch(onItemsUpdated(JSON.parse(json.orders),product.idCommande)))
+            .then ((json) => dispatch(whenItemsUpdated(JSON.parse(json.orders),product.idCommande)))
             .catch((error) => {
                 console.error("Error with FETCH : " + error);
             });
@@ -146,7 +145,7 @@ export const deleteAttribut = (product,attribute) => {
         console.log("started fetch");
         fetch('http://localhost:8000/panier/deleteAttributJSON',request)
             .then ((response) => response.json())
-            .then ((json) => dispatch(onItemsUpdated(JSON.parse(json.orders),product.idCommande)))
+            .then ((json) => dispatch(whenItemsUpdated(JSON.parse(json.orders),product.idCommande)))
             .catch((error) => {
                 console.error("Error with FETCH : " + error);
             });
