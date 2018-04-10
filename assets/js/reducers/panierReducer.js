@@ -99,6 +99,7 @@ export default function panierReducer(state = dataState, action){
         case SETUP_INITIAL:
             return {
                 ...state,
+                token:action.token,
                 totalWithStripe: computeStripeTotal({orders:action.payload}),
                 grandTotal: computeGrandTotal({orders:action.payload}),
                 orders:action.payload.map((order) => {

@@ -33,13 +33,14 @@ export const handleChange = (key,attribute,commandeProduit) =>{
                 .filter((component) => component.id === key)[0]
                     .selectedItem.some((attributeCheck) => attribute.id === attributeCheck.id)){
             dispatch(cancel());
-            console.log("Canceled,fuck off");
         }
         else
         {
+            let token = store.getState().panierReducer.token;
             let params = {
                 'commandeProduit': commandeProduit.id,
-                'attributId': attribute.id
+                'attributId': attribute.id,
+                'token':token,
             };
             let request = prepareRequest(params,"POST");
             fetch('http://localhost:8000/panier/addAttributJSON',request)
@@ -63,9 +64,11 @@ export const cancel= () => {
 
 export const handleDelete = (key,attribut,commandeProduit) =>{
     return(dispatch) => {
+        let token = store.getState().panierReducer.token;
         let params = {
             'commandeProduit': commandeProduit.id,
-            'attributId': attribut.id
+            'attributId': attribut.id,
+            'token':token,
         };
         let request = prepareRequest(params,"DELETE");
         fetch('http://localhost:8000/panier/deleteAttributJSON',request)

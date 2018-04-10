@@ -237,7 +237,7 @@ class Screen extends React.Component {
     }
 
     componentDidMount(){
-        this.props.setupInitial(this.props.panier);
+        this.props.setupInitial(this.props.panier,this.props.token);
     }
 }
 
@@ -273,7 +273,7 @@ function mapDispatchToProps(dispatch,own) {
     return {
         ...own,
         updateQuantity: (evt,newValue) => dispatch(updateQuantity(evt,newValue)),
-        setupInitial: (initial) => dispatch(setupInitial(initial)),
+        setupInitial: (initial,token) => dispatch(setupInitial(initial,token)),
         deleteAttribut:(product,attr) => dispatch(deleteAttribut(product,attr)),
 
         handleCloseModalDelete:()=>dispatch(handleCloseModalDelete()),

@@ -200,29 +200,33 @@ class PanierController extends AbstractController
         $this->denyAccessUnlessGranted('edit', $commandeProduit, "Vous n'avez pas accès a cette commande.");
 
         $attributs = $request->request->get('attributs', []);
-
-        try {
-            $this->panierManager->updateProduit($commandeProduit, $quantite, $attributs);
-        } catch (\Exception $exception) {
-            return new JsonResponse(['data' => ['error' => $exception->getMessage()]]);
-        }
-
-        $commandes = $this->panierManager->getPanierEncours();
-        $this->commandeCoutService->bindCouts($commandes);
-
-        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
-        foreach($commandes as $comm){
-            foreach($comm->getCommandeProduits() as $comProd){
-                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+        
+        $submittedToken = $request->request->get('token','');
+        if ($this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            try {
+                $this->panierManager->updateProduit($commandeProduit, $quantite, $attributs);
+            } catch (\Exception $exception) {
+                return new JsonResponse(['data' => ['error' => $exception->getMessage()]]);
             }
-        }
-        $json = json_encode($commandes);
 
-        return new JsonResponse(
-            [
-                'orders'=>$json
-            ]
-        );
+            $commandes = $this->panierManager->getPanierEncours();
+            $this->commandeCoutService->bindCouts($commandes);
+
+            //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
+            foreach($commandes as $comm){
+                foreach($comm->getCommandeProduits() as $comProd){
+                    $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+                }
+            }
+            $json = json_encode($commandes);
+
+            return new JsonResponse(
+                [
+                    'orders'=>$json
+                ]
+            );   
+        }
+        return $this->redirectToRoute('acecommerce_panier');
     }
 
     /**
@@ -259,14 +263,16 @@ class PanierController extends AbstractController
 
     /**
      *
-     * @Route("/deleteJSON", name="acecommerce_panier_produit_delete")
+     * @Route("/deleteJSON", name="acecommerce_panier_produit_delete_json")
      * @Method("DELETE")
      * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
      */
     public function deleteJSON(Request $request, CommandeProduitRepository $commandeProduitRepository, TvaService $tvaService)
     {
-        //TODO sécuriser form avec $form->isSubmitted() && $form->isValid()
-
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
         $commandeProduitId = $request->request->get('commandeProduit');
         $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
 
@@ -302,7 +308,11 @@ class PanierController extends AbstractController
      */
     public function deleteAttributJSON(Request $request, CommandeProduitRepository $commandeProduitRepository,
                                        AttributRepository $attributRepository,TvaService $tvaService){
-        //TODO sécuriser form avec $form->isSubmitted() && $form->isValid()
+
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
 
         $commandeProduitId = $request->request->get('commandeProduit');
         $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
@@ -342,7 +352,11 @@ class PanierController extends AbstractController
      */
     public function addAttributJSON(Request $request, CommandeProduitRepository $commandeProduitRepository,
                                     AttributRepository $attributRepository,TvaService $tvaService){
-        //TODO sécuriser form avec $form->isSubmitted() && $form->isValid()
+
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
 
         $commandeProduitId = $request->request->get('commandeProduit');
         $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
@@ -416,6 +430,11 @@ class PanierController extends AbstractController
      */
     public function commentaireJSON(Request $request, CommandeProduitRepository $commandeProduitRepository, TvaService $tvaService)
     {
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+        
         $commandeProduitId = $request->request->get('commandeProduit');
         $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
 

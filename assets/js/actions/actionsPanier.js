@@ -40,9 +40,12 @@ export const updateQuantity = (evt,product) => {
             }
         }
 
+        let token = store.getState().panierReducer.token;
         let params = {
-            idCommandeProduit: product.id,
-            quantiteProduit:newQuantity,
+            'idCommandeProduit': product.id,
+            'quantiteProduit':newQuantity,
+            'token': token,
+
         };
 
         let request = prepareRequest(params,"POST");
@@ -105,8 +108,11 @@ export const deletePendingItem = () => {
 
     return(dispatch) =>{
         let product = store.getState().panierReducer.itemPendingDelete;
+        let token = store.getState().panierReducer.token;
+
         let params = {
-            'commandeProduit': product.id
+            'commandeProduit': product.id,
+            'token':token
         };
 
         let request = prepareRequest(params,"DELETE");
@@ -140,9 +146,11 @@ function prepareRequest(params,method) {
 export const deleteAttribut = (product,attribute) => {
     return(dispatch) =>{
 
+        let token = store.getState().panierReducer.token;
         let params = {
-            commandeProduit: product.id,
-            attributId: attribute.id,
+            'commandeProduit': product.id,
+            'attributId': attribute.id,
+            'token':token,
         };
         let request = prepareRequest(params,"DELETE");
 
@@ -158,7 +166,7 @@ export const deleteAttribut = (product,attribute) => {
     }
 };
 
-export const setupInitial = (initialState) =>{
+export const setupInitial = (initialState,token) =>{
     return {
         'type':SETUP_INITIAL,
         'payload':initialState.map((item,index) => {
@@ -172,7 +180,8 @@ export const setupInitial = (initialState) =>{
                     }
                 })
             }
-        })
+        }),
+        'token':token
     }
 };
 
@@ -206,10 +215,12 @@ export const postComment = () =>{
     return(dispatch) =>{
         let product = store.getState().panierReducer.itemPendingComment;
         let comment = store.getState().panierReducer.comment;
+        let token = store.getState().panierReducer.token;
 
         let params = {
             'commandeProduit': product.id,
-            'commentaire': comment
+            'commentaire': comment,
+            'token':token,
         };
 
         let request = prepareRequest(params,"POST");

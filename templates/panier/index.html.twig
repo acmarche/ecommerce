@@ -4,7 +4,7 @@
     <h2>Mon panier</h2>
 
     <div id="detailpanier">
-        <script src="{{ asset("build/js/panierApp.js") }}" panier='{{ json }}'></script>
+        <script src="{{ asset("build/js/panierApp.js") }}" panier='{{ json }}' token="{{ csrf_token('panier-form') }}"></script>
     </div>
 
     <br/>
