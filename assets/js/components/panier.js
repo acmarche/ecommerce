@@ -29,10 +29,16 @@ import Dialog, {
     DialogContentText,
     DialogTitle, }              from 'material-ui/Dialog';
 import {updateQuantity,setupInitial,deletePendingItem,toggleExpandItemAttributes,
-    handleCloseModalDelete,handleShowModalDelete,deleteAttribut} from '../actions/actionsPanier'; //Import your actions
+    handleCloseModalDelete,handleShowModalDelete,handleShowModalComment,deleteAttribut,
+    handleCloseModalComment,postComment,commentChanged} from '../actions/actionsPanier'; //Import your actions
 import * as FontAwesome         from 'react-icons/lib/fa';
 import IconButton               from "material-ui/es/IconButton/IconButton";
 import ListItemSecondaryAction  from "material-ui/es/List/ListItemSecondaryAction";
+import ModalDelete from './modalDelete'
+import ModalComment from './modalComment'
+import {stringLocalizer} from '../strings'
+
+const strings = stringLocalizer('fr');
 
 const styles = theme => ({
     root: {
@@ -46,6 +52,10 @@ const styles = theme => ({
         width:180
     },
     cellDelete:{
+        width:60,
+        height:60
+    },
+    cellComment:{
         width:60,
         height:60
     },
@@ -105,9 +115,9 @@ class Screen extends React.Component {
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Commerce</TableCell>
-                            <TableCell>Produit</TableCell>
-                            <TableCell>Total</TableCell>
+                            <TableCell>{strings.commerceColumn}</TableCell>
+                            <TableCell>{strings.productColumn}</TableCell>
+                            <TableCell>{strings.totalColumn}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -153,7 +163,7 @@ class Screen extends React.Component {
                                                 <ListItem>
                                                     <TextField
                                                         id="quantite"
-                                                        label="Quantité"
+                                                        label={strings.quantity}
                                                         value={commandeProduit.quantite}
                                                         type="number"
                                                         onChange={(evt) => {this.props.updateQuantity(evt,commandeProduit)}}/>
@@ -170,6 +180,18 @@ class Screen extends React.Component {
                                                 <ListItem button onClick={() => this.props.handleShowModalDelete(commandeProduit)} color="primary" className={classes.cellDelete}>
                                                     <FontAwesome.FaTrash/>
                                                 </ListItem>
+
+                                                {
+                                                    commandeProduit.showCircularProgressComment ?
+
+                                                        <ListItem color="primary" className={classes.cellComment}>
+                                                            <CircularProgress/>
+                                                        </ListItem> :
+
+                                                        <ListItem button onClick={() => this.props.handleShowModalComment(commandeProduit)} color="primary" className={classes.cellComment}>
+                                                            <FontAwesome.FaCommentO/>
+                                                        </ListItem>
+                                                }
                                             </List>
                                         ))}
                                     </TableCell>
@@ -180,14 +202,14 @@ class Screen extends React.Component {
                             );
                         })}
                         <TableRow>
-                            <TableCell className={classes.cellStripeTotal}>Frais de transport et Stripe</TableCell>
+                            <TableCell className={classes.cellStripeTotal}>{strings.stripeFee}</TableCell>
                             <TableCell className={classes.cellStripeTotal}/>
                             <TableCell className={classes.cellStripeTotal}>
                                 {this.props.loading ? <CircularProgress/> : this.props.totalWithStripe.toFixed(2) + "€" }
                             </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell className={classes.cellGrandTotal}>Total à payer</TableCell>
+                            <TableCell className={classes.cellGrandTotal}>{strings.grandTotal}</TableCell>
                             <TableCell className={classes.cellGrandTotal}/>
                             <TableCell className={classes.cellGrandTotal}>
                                 {this.props.loading ? <CircularProgress/> : this.props.grandTotal.toFixed(2) + "€" }
@@ -197,27 +219,19 @@ class Screen extends React.Component {
 
                     </TableBody>
                 </Table>
-                <Dialog
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    open={this.props.showModalDelete}
-                    onClose={this.props.handleCloseModalDelete}>
 
-                    <DialogTitle id="alert-dialog-title">{"Supprimer l'article ?"}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            Cette action est irréversible
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.props.handleCloseModalDelete} color="primary" autoFocus>
-                            Annuler
-                        </Button>
-                        <Button onClick={this.props.deletePendingItem} color="primary">
-                            Supprimer
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                <ModalDelete
+                    showModalDelete={this.props.showModalDelete}
+                    handleCloseModalDelete={this.props.handleCloseModalDelete}
+                    deletePendingItem={this.props.deletePendingItem}/>
+
+                <ModalComment
+                    handleCloseModalComment={this.props.handleCloseModalComment}
+                    showModalComment={this.props.showModalComment}
+                    comment={this.props.comment}
+                    commentValueChanged={this.props.commentChanged}
+                    postComment={this.props.postComment}/>
+
             </Paper>
         );
     }
@@ -226,8 +240,6 @@ class Screen extends React.Component {
         this.props.setupInitial(this.props.panier);
     }
 }
-
-
 
 Screen.propTypes = {
     classes: PropTypes.object.isRequired,
@@ -250,8 +262,10 @@ const mapStateToProps = (state, own) => {
         loading: state.panierReducer.loading,
         orders: state.panierReducer.orders,
         showModalDelete: state.panierReducer.showModalDelete,
+        showModalComment: state.panierReducer.showModalComment,
         totalWithStripe:state.panierReducer.totalWithStripe,
-        grandTotal:state.panierReducer.grandTotal
+        grandTotal:state.panierReducer.grandTotal,
+        comment:state.panierReducer.comment,
     }
 };
 
@@ -260,10 +274,17 @@ function mapDispatchToProps(dispatch,own) {
         ...own,
         updateQuantity: (evt,newValue) => dispatch(updateQuantity(evt,newValue)),
         setupInitial: (initial) => dispatch(setupInitial(initial)),
-        deletePendingItem:() => dispatch(deletePendingItem()),
         deleteAttribut:(product,attr) => dispatch(deleteAttribut(product,attr)),
+
         handleCloseModalDelete:()=>dispatch(handleCloseModalDelete()),
         handleShowModalDelete:(product)=>dispatch(handleShowModalDelete(product)),
+        deletePendingItem:() => dispatch(deletePendingItem()),
+
+        handleShowModalComment:(product)=>dispatch(handleShowModalComment(product)),
+        handleCloseModalComment:(product)=>dispatch(handleCloseModalComment(product)),
+        commentChanged:(evt)=>dispatch(commentChanged(evt)),
+        postComment:()=>dispatch(postComment()),
+
         toggleExpandItemAttributes:(product)=>dispatch(toggleExpandItemAttributes(product)),
     }
 }

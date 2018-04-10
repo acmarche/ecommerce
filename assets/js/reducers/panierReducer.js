@@ -1,13 +1,16 @@
 import {PENDING_UPDATE, SETUP_INITIAL, CANCEL, PENDING_DELETE,TOGGLE_EXPAND_ITEM_ATTRIBUTES,
     DELETE_ITEM, WHEN_ORDER_UPDATED,HANDLE_CLOSE_MODAL_DELETE,HANDLE_SHOW_MODAL_DELETE
-    ,PENDING_DELETE_ATTRIBUT,PENDING_ADD_ATTRIBUT} from "../actions/actionsPanier"
+    ,PENDING_DELETE_ATTRIBUT,PENDING_ADD_ATTRIBUT,HANDLE_SHOW_MODAL_COMMENT,HANDLE_CLOSE_MODAL_COMMENT,
+    COMMENT_CHANGED,WHEN_COMMENT_POSTED,PENDING_POST_COMMENT} from "../actions/actionsPanier"
 
 let dataState = {
     orders: [],
     loading:false,
     showModalDelete: false,
+    showModalComment: false,
     totalWithStripe:0,
-    grandTotal:0
+    grandTotal:0,
+    comment:'',
 };
 
 export default function panierReducer(state = dataState, action){
@@ -35,7 +38,7 @@ export default function panierReducer(state = dataState, action){
             return {
                 ...state,
                 loading:true,
-                orders:removeAttribute(state.orders,action.attribute,true)
+                orders:removeAttribute(state,action.produitTarget,action.attribute,true)
             };
 
         case PENDING_ADD_ATTRIBUT:
@@ -43,6 +46,25 @@ export default function panierReducer(state = dataState, action){
                 ...state,
                 loading:true,
                 orders:addAttribute(state,action.produitTarget,action.attribute,true)
+            };
+
+        case PENDING_POST_COMMENT:
+            return{
+                ...state,
+                orders: state.orders.map((order) => {
+                    return{
+                        ...order,
+                        commandeProduits: order.commandeProduits.map((commandeProduit) => {
+                            if(commandeProduit.id === action.product.id){
+                                return{
+                                    ...commandeProduit,
+                                    showCircularProgressComment: true
+                                }
+                            }
+                            return commandeProduit;
+                        })
+                    }
+                })
             };
 
         //The fetch request is done, update total and remove circular icon
@@ -53,6 +75,25 @@ export default function panierReducer(state = dataState, action){
                 orders:updateOrderTotal(state.orders,action.payload.newOrders, action.payload.idOrderToUpdate),
                 totalWithStripe:computeStripeTotal(state),
                 grandTotal:computeGrandTotal(state)
+            };
+
+        case WHEN_COMMENT_POSTED:
+            return{
+                ...state,
+                orders: state.orders.map((order) => {
+                    return{
+                        ...order,
+                        commandeProduits: order.commandeProduits.map((commandeProduit) => {
+                            if(commandeProduit.id === action.product.id){
+                                return{
+                                    ...commandeProduit,
+                                    showCircularProgressComment: false
+                                }
+                            }
+                            return commandeProduit;
+                        })
+                    }
+                })
             };
 
         case SETUP_INITIAL:
@@ -83,7 +124,8 @@ export default function panierReducer(state = dataState, action){
         case HANDLE_CLOSE_MODAL_DELETE:
             return {
                 ...state,
-                showModalDelete: false
+                showModalDelete: false,
+                itemPendingDelete:undefined
             };
 
         case HANDLE_SHOW_MODAL_DELETE:
@@ -91,6 +133,26 @@ export default function panierReducer(state = dataState, action){
                 ...state,
                 showModalDelete: true,
                 itemPendingDelete: action.payload
+            };
+
+        case HANDLE_SHOW_MODAL_COMMENT:
+            return{
+                ...state,
+                showModalComment: true,
+                itemPendingComment: action.payload
+            };
+
+        case HANDLE_CLOSE_MODAL_COMMENT:
+            return{
+                ...state,
+                showModalComment:false,
+                itemPendingComment: undefined
+            };
+
+        case COMMENT_CHANGED:
+            return{
+                ...state,
+                comment: action.value,
             };
 
         case CANCEL:
@@ -111,6 +173,7 @@ export default function panierReducer(state = dataState, action){
                             }
                             return{
                                 ...commandeProduit,
+                                expanded: false
                             }
                         })
                     }
@@ -183,16 +246,14 @@ function removeItem(array, itemToRemove) {
     }).filter((item,index) => item.commandeProduits.length > 0);
 }
 
-function removeAttribute(orders, attributeToRemove, showCircularProgress){
-    console.log(orders);
-    console.log(attributeToRemove);
-
-    return orders.map((order) => {
-        return {
+function removeAttribute(state, produitTarget, attributeToRemove, showCircularProgress){
+    return state.orders.map((order) => {
+        let found = false;
+        let newOrder = {
             ...order,
             commandeProduits:order.commandeProduits.map((produit) => {
-                if(produit.attributs.some((attribute) => attribute.id === attributeToRemove.id)){
-                    console.log("found");
+                if(produitTarget.id === produit.id){
+                    found = true;
                     return{
                         ...produit,
                         showCircularProgress: showCircularProgress,
@@ -202,15 +263,25 @@ function removeAttribute(orders, attributeToRemove, showCircularProgress){
                 return produit;
             })
         };
+
+        if(found){
+            return{
+                ...newOrder,
+                showCircularProgress: showCircularProgress,
+            }
+        }
+        return newOrder;
     });
 }
 
 function addAttribute(state,produitTarget, attributeToAdd, showCircularProgress){
     return state.orders.map((order) => {
-        return {
+        let found = false;
+        let newOrder = {
             ...order,
             commandeProduits:order.commandeProduits.map((produit) => {
                 if(produitTarget.id === produit.id){
+                    found = true;
                     return{
                         ...produit,
                         showCircularProgress: showCircularProgress,
@@ -220,6 +291,14 @@ function addAttribute(state,produitTarget, attributeToAdd, showCircularProgress)
                 return produit;
             })
         };
+
+        if(found){
+            return{
+                ...newOrder,
+                showCircularProgress: showCircularProgress
+            }
+        }
+        return newOrder;
     });
 }
 

@@ -77,11 +77,13 @@ class PanierController extends AbstractController
 
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
             }
         }
+
         $json = json_encode($commandes);
 
 
@@ -208,6 +210,7 @@ class PanierController extends AbstractController
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
@@ -276,6 +279,7 @@ class PanierController extends AbstractController
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
@@ -315,6 +319,7 @@ class PanierController extends AbstractController
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
@@ -354,6 +359,7 @@ class PanierController extends AbstractController
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
@@ -423,6 +429,7 @@ class PanierController extends AbstractController
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));

@@ -147,6 +147,7 @@ class CommandeProduit extends BaseCommandeProduit implements CommandeProduitInte
             'produit' =>$this->getProduit(),
             'quantite' =>$this->getQuantite(),
             'prixTvac' => $this->getPrixTvac(),
+            'prixHtva' => $this->getPrixHtva(),
             'idCommande' => $this->getCommande()->getId(),
             'attributs'=> $arrayAttributs
         ];

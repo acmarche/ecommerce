@@ -10,6 +10,9 @@ import TextField from 'material-ui/TextField';
 import { FormGroup, FormControlLabel, FormControl,FormHelperText } from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import {stringLocalizer} from '../strings'
+
+const strings = stringLocalizer('fr');
 
 const styles = theme => ({
     card: {
@@ -56,7 +59,7 @@ class LoginForm extends React.Component {
     constructor(props){
         super(props);
 
-        var hasCredentialsError = !(this.props.error == '' || this.props.error == null);
+        let hasCredentialsError = !(this.props.error === '' || this.props.error == null);
 
         this.state={
             username:'',
@@ -76,11 +79,11 @@ class LoginForm extends React.Component {
 
     handleSubmit = event => {
 
-        var hasError = false;
+        let hasError = false;
         if(this.state.username === ''){
             event.preventDefault();
             this.setState({
-                errorUsername:"Veuillez remplir ce champ",
+                errorUsername: strings.mandatoryField,
                 fieldUsernameHasError:true
             });
             hasError = true;
@@ -89,7 +92,7 @@ class LoginForm extends React.Component {
         if(this.state.password === ''){
             event.preventDefault();
             this.setState({
-                errorPassword:"Veuillez remplir ce champ",
+                errorPassword: strings.mandatoryField,
                 fieldPasswordHasError:true
             });
             hasError = true;
@@ -112,7 +115,7 @@ class LoginForm extends React.Component {
                                 color="secondary"
                                 name="_username"
                                 id="_username"
-                                label="Nom d'utilisateur"
+                                label={strings.username}
                                 className={classes.textField}
                                 helperText={this.state.errorUsername}
                                 error={this.state.fieldUsernameHasError}
@@ -124,7 +127,7 @@ class LoginForm extends React.Component {
                                 color="secondary"
                                 name="_password"
                                 id="_password"
-                                label="Mot de passe"
+                                label={strings.password}
                                 type="password"
                                 className={classes.textField}
                                 helperText={this.state.errorPassword}
@@ -134,9 +137,9 @@ class LoginForm extends React.Component {
                                 margin="normal"/>
 
                             <Button variant="raised" color='primary' className={classes.buttonRaised} type="submit">
-                                Connexion
+                                {strings.connection}
                             </Button>
-                            <Button className={classes.button} color="primary">Mot de passe oublié ?</Button>
+                            <Button className={classes.button} color="primary">{strings.forgotPassword}</Button>
                         </form>
                     </CardContent>
                 </Card>

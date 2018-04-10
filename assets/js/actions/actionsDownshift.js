@@ -75,7 +75,7 @@ export const handleDelete = (key,attribut,commandeProduit) =>{
                 console.error("Error with FETCH : " + error);
             });
         dispatch(deleteAttribute(key,attribut));
-        dispatch(whileDeletingAttribute(attribut))
+        dispatch(whileDeletingAttribute(commandeProduit,attribut))
     }
 };
 
@@ -95,10 +95,11 @@ export const deleteAttribute = (key,item) => {
     }
 };
 
-export const whileDeletingAttribute = (attribute) => {
+export const whileDeletingAttribute = (target,attribute) => {
     return{
         type:PENDING_DELETE_ATTRIBUT,
         attribute:attribute,
+        produitTarget:target,
     }
 };
 

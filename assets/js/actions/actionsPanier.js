@@ -7,12 +7,17 @@ export const CANCEL = 'CANCEL';
 export const DELETE_ITEM = 'DELETE_ITEM';
 export const SHOW_CIRCULAR_PROGRESS = 'CIRCULAR';
 export const WHEN_ORDER_UPDATED = 'WHEN_ORDER_UPDATED';
+export const WHEN_COMMENT_POSTED = 'WHEN_COMMENT_POSTED';
 export const HANDLE_CLOSE_MODAL_DELETE = 'HANDLE_CLOSE_MODAL_DELETE';
+export const HANDLE_CLOSE_MODAL_COMMENT = 'HANDLE_CLOSE_MODAL_COMMENT';
 export const HANDLE_SHOW_MODAL_DELETE = 'HANDLE_SHOW_MODAL_DELETE';
+export const HANDLE_SHOW_MODAL_COMMENT= 'HANDLE_SHOW_MODAL_COMMENT';
 export const TOGGLE_EXPAND_ITEM_ATTRIBUTES = 'TOGGLE_EXPAND_ITEM_ATTRIBUTES';
 export const DELETE_ATTRIBUT = 'DELETE_ATTRIBUT';
 export const PENDING_DELETE_ATTRIBUT = 'PENDING_DELETE_ATTRIBUT';
+export const PENDING_POST_COMMENT = 'PENDING_POST_COMMENT';
 export const PENDING_ADD_ATTRIBUT = "PENDING_ADD_ATTRIBUT";
+export const COMMENT_CHANGED = 'COMMENT_CHANGED';
 
 /*
 
@@ -121,7 +126,7 @@ function prepareRequest(params,method) {
         .map(k => esc(k) + '=' + esc(params[k]))
         .join('&');
 
-    let request = {
+    return {
         method: method,
         headers: {
             Accept: 'application/json',
@@ -130,7 +135,6 @@ function prepareRequest(params,method) {
         credentials: 'include',
         body: body
     };
-    return request;
 }
 
 export const deleteAttribut = (product,attribute) => {
@@ -182,6 +186,62 @@ export const handleShowModalDelete = (itemPendingDelete) =>{
     return {
         type:HANDLE_SHOW_MODAL_DELETE,
         payload:itemPendingDelete
+    }
+};
+
+export const handleCloseModalComment = () =>{
+    return{
+        type:HANDLE_CLOSE_MODAL_COMMENT
+    }
+};
+
+export const handleShowModalComment = (itemPendingComment) =>{
+    return {
+        type:HANDLE_SHOW_MODAL_COMMENT,
+        payload:itemPendingComment
+    }
+};
+
+export const postComment = () =>{
+    return(dispatch) =>{
+        let product = store.getState().panierReducer.itemPendingComment;
+        let comment = store.getState().panierReducer.comment;
+
+        let params = {
+            'commandeProduit': product.id,
+            'commentaire': comment
+        };
+
+        let request = prepareRequest(params,"POST");
+        fetch('http://localhost:8000/panier/commentaireJSON',request)
+            .then ((response) => dispatch(whenCommentPosted(product)))
+            .catch((error) => {
+                console.error("Error with FETCH : " + error);
+            });
+        dispatch(whileFetchingPostComment(product));
+        dispatch(handleCloseModalComment());
+    }
+};
+
+
+export const whileFetchingPostComment = (product) => {
+    return{
+        type:PENDING_POST_COMMENT,
+        product: product
+    }
+};
+
+export const whenCommentPosted = (product) => {
+    return{
+        type:WHEN_COMMENT_POSTED,
+        product: product
+    }
+};
+
+export const commentChanged = (evt) => {
+    return{
+        type:COMMENT_CHANGED,
+        value: evt.target.value
     }
 };
 
