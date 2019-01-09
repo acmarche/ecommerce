@@ -7,6 +7,8 @@ use App\Event\PanierEvent;
 use App\Form\Commande\CommandeProduitType;
 use App\Manager\CommandeProduitManager;
 use App\Manager\PanierManager;
+use App\Repository\Attribut\AttributRepository;
+use App\Repository\Attribut\ProduitListingAttributRepository;
 use App\Repository\Commande\CommandeProduitRepository;
 use App\Service\CommandeCoutService;
 use App\Service\RequestService;
@@ -52,7 +54,8 @@ class PanierController extends AbstractController
     public function index(
         Request $request,
         EventDispatcherInterface $eventDispatcher,
-        TvaService $tvaService
+        TvaService $tvaService,
+        ProduitListingAttributRepository $attributRepository
     ) {
         $ruptures = $indisponibles = $commandes = null;
 
@@ -74,12 +77,15 @@ class PanierController extends AbstractController
 
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
             }
         }
+
         $json = json_encode($commandes);
+
 
         return [
             'ruptures' => $ruptures,
@@ -194,28 +200,33 @@ class PanierController extends AbstractController
         $this->denyAccessUnlessGranted('edit', $commandeProduit, "Vous n'avez pas accès a cette commande.");
 
         $attributs = $request->request->get('attributs', []);
-
-        try {
-            $this->panierManager->updateProduit($commandeProduit, $quantite, $attributs);
-        } catch (\Exception $exception) {
-            return new JsonResponse(['data' => ['error' => $exception->getMessage()]]);
-        }
-
-        $commandes = $this->panierManager->getPanierEncours();
-        $this->commandeCoutService->bindCouts($commandes);
-
-        foreach($commandes as $comm){
-            foreach($comm->getCommandeProduits() as $comProd){
-                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+        
+        $submittedToken = $request->request->get('token','');
+        if ($this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            try {
+                $this->panierManager->updateProduit($commandeProduit, $quantite, $attributs);
+            } catch (\Exception $exception) {
+                return new JsonResponse(['data' => ['error' => $exception->getMessage()]]);
             }
-        }
-        $json = json_encode($commandes);
 
-        return new JsonResponse(
-            [
-                'orders'=>$json
-            ]
-        );
+            $commandes = $this->panierManager->getPanierEncours();
+            $this->commandeCoutService->bindCouts($commandes);
+
+            //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
+            foreach($commandes as $comm){
+                foreach($comm->getCommandeProduits() as $comProd){
+                    $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+                }
+            }
+            $json = json_encode($commandes);
+
+            return new JsonResponse(
+                [
+                    'orders'=>$json
+                ]
+            );   
+        }
+        return $this->redirectToRoute('acecommerce_panier');
     }
 
     /**
@@ -252,35 +263,123 @@ class PanierController extends AbstractController
 
     /**
      *
-     * @Route("/deleteJSON", name="acecommerce_panier_produit_delete")
+     * @Route("/deleteJSON", name="acecommerce_panier_produit_delete_json")
      * @Method("DELETE")
      * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
      */
     public function deleteJSON(Request $request, CommandeProduitRepository $commandeProduitRepository, TvaService $tvaService)
     {
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
         $commandeProduitId = $request->request->get('commandeProduit');
         $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
 
         if (!$commandeProduit) {
-
-            //TODO : return infos concernant la suppression si erreur
-            return new JsonResponse([
-                "message"=>"Objet CommandeProduit non trouvé"
-            ]);
+            return $this->redirectToRoute('acecommerce_panier');
         }
 
-        $form = $this->createDeleteForm();
-        $form->handleRequest($request);
         $this->panierManager->removeProduit($commandeProduit);
 
         $commandes = $this->panierManager->getPanierEncours();
         $this->commandeCoutService->bindCouts($commandes);
 
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
         foreach($commandes as $comm){
             foreach($comm->getCommandeProduits() as $comProd){
                 $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
             }
         }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
+    }
+
+    /**
+     *
+     * @Route("/deleteAttributJSON", name="acecommerce_panier_produit_delete_attribute_json")
+     * @Method("DELETE")
+     * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
+     */
+    public function deleteAttributJSON(Request $request, CommandeProduitRepository $commandeProduitRepository,
+                                       AttributRepository $attributRepository,TvaService $tvaService){
+
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+
+        $commandeProduitId = $request->request->get('commandeProduit');
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+
+        $attributId = $request->request->get('attributId');
+        $attribut = $attributRepository->find($attributId);
+
+        if (!$commandeProduit || !$attribut) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+
+        $this->panierManager->removeAttribut($commandeProduit,$attribut);
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
+    }
+
+    /**
+     *
+     * @Route("/addAttributJSON", name="acecommerce_panier_produit_add_attribute_json")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
+     */
+    public function addAttributJSON(Request $request, CommandeProduitRepository $commandeProduitRepository,
+                                    AttributRepository $attributRepository,TvaService $tvaService){
+
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+
+        $commandeProduitId = $request->request->get('commandeProduit');
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+
+        $attributId = $request->request->get('attributId');
+        $attribut = $attributRepository->find($attributId);
+
+        if (!$commandeProduit || !$attribut) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+
+        $this->panierManager->addAttribut($commandeProduit,$attribut);
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+
         $json = json_encode($commandes);
 
         return new JsonResponse(
@@ -321,6 +420,47 @@ class PanierController extends AbstractController
         }
 
         return $this->redirectToRoute('acecommerce_panier');
+    }
+
+    /**
+     *
+     * @Route("/commentaireJSON", name="acecommerce_panier_produit_commentaire")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ECOMMERCE_CLIENT')")
+     */
+    public function commentaireJSON(Request $request, CommandeProduitRepository $commandeProduitRepository, TvaService $tvaService)
+    {
+        $submittedToken = $request->request->get('token','');
+        if (!$this->isCsrfTokenValid('panier-form', $submittedToken)) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+        
+        $commandeProduitId = $request->request->get('commandeProduit');
+        $commandeProduit = $commandeProduitRepository->find($commandeProduitId);
+
+        if (!$commandeProduit) {
+            return $this->redirectToRoute('acecommerce_panier');
+        }
+        $commentaire = $request->request->get('commentaire');
+
+        $this->panierManager->commentaireProduit($commandeProduit, $commentaire);
+
+        $commandes = $this->panierManager->getPanierEncours();
+        $this->commandeCoutService->bindCouts($commandes);
+
+        //Obligatoire d'initialiser le prixTvac ici, les filtres twig sont inaccessibles à ReactJS
+        foreach($commandes as $comm){
+            foreach($comm->getCommandeProduits() as $comProd){
+                $comProd->setPrixTvac($tvaService->getPrixProduitTvac($comProd->getProduit()));
+            }
+        }
+        $json = json_encode($commandes);
+
+        return new JsonResponse(
+            [
+                'orders'=>$json
+            ]
+        );
     }
 
     /**

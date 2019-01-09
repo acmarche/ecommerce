@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DownShift from './downShiftAttributes'
 import { connect } from 'react-redux';
 
 import Table, { TableBody,
@@ -27,10 +28,17 @@ import Dialog, {
     DialogContent,
     DialogContentText,
     DialogTitle, }              from 'material-ui/Dialog';
-
 import {updateQuantity,setupInitial,deletePendingItem,toggleExpandItemAttributes,
-    handleCloseModalDelete,handleShowModalDelete} from '../actions/actionsPanier'; //Import your actions
-import * as FontAwesome from 'react-icons/lib/fa';
+    handleCloseModalDelete,handleShowModalDelete,handleShowModalComment,deleteAttribut,
+    handleCloseModalComment,postComment,commentChanged} from '../actions/actionsPanier'; //Import your actions
+import * as FontAwesome         from 'react-icons/lib/fa';
+import IconButton               from "material-ui/es/IconButton/IconButton";
+import ListItemSecondaryAction  from "material-ui/es/List/ListItemSecondaryAction";
+import ModalDelete from './modalDelete'
+import ModalComment from './modalComment'
+import {stringLocalizer} from '../strings'
+
+const strings = stringLocalizer('fr');
 
 const styles = theme => ({
     root: {
@@ -46,6 +54,13 @@ const styles = theme => ({
     cellDelete:{
         width:60,
         height:60
+    },
+    cellComment:{
+        width:60,
+        height:60
+    },
+    cellTotalOrder:{
+        width:200
     },
     progress: {
         margin: theme.spacing.unit * 2,
@@ -74,6 +89,16 @@ const styles = theme => ({
     },
     cellGrandTotal:{
         fontSize:'19pt'
+    },
+    attribut:{
+        display: 'flex',
+        alignItems:'end'
+    },
+    attributName:{
+        width:180
+    },
+    iconAttributDelete:{
+        width:15
     }
 });
 
@@ -90,9 +115,9 @@ class Screen extends React.Component {
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Commerce</TableCell>
-                            <TableCell>Produit</TableCell>
-                            <TableCell>Total</TableCell>
+                            <TableCell>{strings.commerceColumn}</TableCell>
+                            <TableCell>{strings.productColumn}</TableCell>
+                            <TableCell>{strings.totalColumn}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -101,27 +126,33 @@ class Screen extends React.Component {
                                 <TableRow key={commande.commerce.nom}>
                                     <TableCell>{commande.commerce.nom}</TableCell>
                                     <TableCell>
-                                        {commande.produits.map(produit => (
-                                            <List className={classes.list} key={produit.id}>
+                                        {commande.commandeProduits.map(commandeProduit => (
+                                            <List className={classes.list} key={commandeProduit.id}>
                                                 <ListItem className={classes.listProduit}>
                                                     <div>
-                                                        <ListItemText secondary={produit.nom} className={classes.cellName}/>
-                                                        <Collapse in={produit.expanded} timeout="auto" unmountOnExit>
-                                                            <List dense={true} disablePadding>
-                                                                {produit.attributs.map((attribut) =>{
-                                                                    return(
-                                                                        <ListItem key={attribut.id}>
-                                                                            <ListItemText
-                                                                                secondary={attribut.nom}/>
-                                                                        </ListItem>
+                                                        <ListItemText secondary={commandeProduit.produit.nom} className={classes.cellName}/>
+                                                        <Collapse in={commandeProduit.expanded} timeout="auto" unmountOnExit>
+                                                            {
+                                                                commandeProduit.produit.produitListingAttributs.map(listingAttribut => {
+                                                                    return (
+                                                                        <DownShift
+                                                                            key={listingAttribut.id}
+                                                                            identifier={listingAttribut.id}
+                                                                            commandeProduit={commandeProduit}
+                                                                            label={listingAttribut.listingAttributs.nom}
+                                                                            suggestions={listingAttribut.listingAttributs.attributs}
+                                                                            //Seulement les attributs qui font partie du listing à afficher
+                                                                            selection={commandeProduit.attributs.filter((attr) => attr.listingAttributId === listingAttribut.listingAttributs.id)}/>
                                                                     )
                                                                 })}
-                                                            </List>
+                                                            <div style={{height:180}}>
+
+                                                            </div>
                                                         </Collapse>
                                                     </div>
-                                                    <ListItem button onClick={() => {this.props.toggleExpandItemAttributes(produit)}}>
-                                                        {produit.attributs.length > 0 ?
-                                                            produit.expanded ?
+                                                    <ListItem button onClick={() => {this.props.toggleExpandItemAttributes(commandeProduit)}}>
+                                                        {commandeProduit.produit.produitListingAttributs.length > 0 ?
+                                                            commandeProduit.expanded ?
                                                                 <ExpandLess /> : <ExpandMore />
                                                             :<Remove/>
                                                         }
@@ -132,84 +163,81 @@ class Screen extends React.Component {
                                                 <ListItem>
                                                     <TextField
                                                         id="quantite"
-                                                        label="Quantité"
-                                                        value={produit.quantite}
+                                                        label={strings.quantity}
+                                                        value={commandeProduit.quantite}
                                                         type="number"
-                                                        onChange={this.props.updateQuantity.bind(null,produit)}/>
+                                                        onChange={(evt) => {this.props.updateQuantity(evt,commandeProduit)}}/>
                                                 </ListItem>
 
                                                 <ListItem>
-                                                    <ListItemText primary={produit.prix.toFixed(2) + "€"}/>
+                                                    {
+                                                        commandeProduit.showCircularProgress ?
+                                                            <CircularProgress/>:
+                                                            <ListItemText primary={commandeProduit.prix.toFixed(2) + "€"}/>
+                                                    }
                                                 </ListItem>
 
-                                                <ListItem button onClick={() => this.props.handleShowModalDelete(produit)} color="primary" className={classes.cellDelete}>
+                                                <ListItem button onClick={() => this.props.handleShowModalDelete(commandeProduit)} color="primary" className={classes.cellDelete}>
                                                     <FontAwesome.FaTrash/>
                                                 </ListItem>
+
+                                                {
+                                                    commandeProduit.showCircularProgressComment ?
+
+                                                        <ListItem color="primary" className={classes.cellComment}>
+                                                            <CircularProgress/>
+                                                        </ListItem> :
+
+                                                        <ListItem button onClick={() => this.props.handleShowModalComment(commandeProduit)} color="primary" className={classes.cellComment}>
+                                                            <FontAwesome.FaCommentO/>
+                                                        </ListItem>
+                                                }
                                             </List>
                                         ))}
                                     </TableCell>
-                                    {this.showProgressOrTotal(commande)}
+                                    <TableCell className={classes.cellTotalOrder}>
+                                        {commande.showCircularProgress ? <CircularProgress/> : commande.cout.totalTvac.toFixed(2) + "€"}
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}
                         <TableRow>
-                            <TableCell className={classes.cellStripeTotal}>Frais de transport et Stripe</TableCell>
+                            <TableCell className={classes.cellStripeTotal}>{strings.stripeFee}</TableCell>
                             <TableCell className={classes.cellStripeTotal}/>
-                            <TableCell className={classes.cellStripeTotal}>{this.props.totalWithStripe.toFixed(2) + '€'}</TableCell>
+                            <TableCell className={classes.cellStripeTotal}>
+                                {this.props.loading ? <CircularProgress/> : this.props.totalWithStripe.toFixed(2) + "€" }
+                            </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell className={classes.cellGrandTotal}>Total à payer</TableCell>
+                            <TableCell className={classes.cellGrandTotal}>{strings.grandTotal}</TableCell>
                             <TableCell className={classes.cellGrandTotal}/>
-                            <TableCell className={classes.cellGrandTotal}>{this.props.grandTotal.toFixed(2) + "€"}</TableCell>
+                            <TableCell className={classes.cellGrandTotal}>
+                                {this.props.loading ? <CircularProgress/> : this.props.grandTotal.toFixed(2) + "€" }
+                            </TableCell>
                         </TableRow>
+
 
                     </TableBody>
                 </Table>
 
-                <Dialog
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    open={this.props.showModalDelete}
-                    onClose={this.props.handleCloseModalDelete}>
+                <ModalDelete
+                    showModalDelete={this.props.showModalDelete}
+                    handleCloseModalDelete={this.props.handleCloseModalDelete}
+                    deletePendingItem={this.props.deletePendingItem}/>
 
-                    <DialogTitle id="alert-dialog-title">{"Supprimer l'article ?"}</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            Cette action est irréversible
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.props.handleCloseModalDelete} color="primary" autoFocus>
-                            Annuler
-                        </Button>
-                        <Button onClick={this.props.deletePendingItem} color="primary">
-                            Supprimer
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                <ModalComment
+                    handleCloseModalComment={this.props.handleCloseModalComment}
+                    showModalComment={this.props.showModalComment}
+                    comment={this.props.comment}
+                    commentValueChanged={this.props.commentChanged}
+                    postComment={this.props.postComment}/>
 
             </Paper>
         );
     }
 
-    showProgressOrTotal(order){
-        if(!order.showCircularProgress){
-            return(
-                <TableCell>{order.cout.totalTvac.toFixed(2) + "€"}</TableCell>
-            );
-        }
-        else {
-            return(
-                <TableCell>
-                    <CircularProgress/>
-                </TableCell>
-            );
-
-        }
-    }
-
     componentDidMount(){
-        this.props.setupInitial(this.props.panier);
+        this.props.setupInitial(this.props.panier,this.props.token);
     }
 }
 
@@ -231,23 +259,33 @@ function getModalStyle() {
 const mapStateToProps = (state, own) => {
     return {
         ...own,
-        loading: state.loading,
-        orders: state.orders,
-        showModalDelete: state.showModalDelete,
-        totalWithStripe:state.totalWithStripe,
-        grandTotal:state.grandTotal
+        loading: state.panierReducer.loading,
+        orders: state.panierReducer.orders,
+        showModalDelete: state.panierReducer.showModalDelete,
+        showModalComment: state.panierReducer.showModalComment,
+        totalWithStripe:state.panierReducer.totalWithStripe,
+        grandTotal:state.panierReducer.grandTotal,
+        comment:state.panierReducer.comment,
     }
 };
 
 function mapDispatchToProps(dispatch,own) {
     return {
         ...own,
-        updateQuantity: (evt,newValue) => dispatch(updateQuantity(newValue,evt)),
-        setupInitial: (initial) => dispatch(setupInitial(initial)),
-        deletePendingItem:() => dispatch(deletePendingItem()),
+        updateQuantity: (evt,newValue) => dispatch(updateQuantity(evt,newValue)),
+        setupInitial: (initial,token) => dispatch(setupInitial(initial,token)),
+        deleteAttribut:(product,attr) => dispatch(deleteAttribut(product,attr)),
+
         handleCloseModalDelete:()=>dispatch(handleCloseModalDelete()),
         handleShowModalDelete:(product)=>dispatch(handleShowModalDelete(product)),
-        toggleExpandItemAttributes:(product)=>dispatch(toggleExpandItemAttributes(product))
+        deletePendingItem:() => dispatch(deletePendingItem()),
+
+        handleShowModalComment:(product)=>dispatch(handleShowModalComment(product)),
+        handleCloseModalComment:(product)=>dispatch(handleCloseModalComment(product)),
+        commentChanged:(evt)=>dispatch(commentChanged(evt)),
+        postComment:()=>dispatch(postComment()),
+
+        toggleExpandItemAttributes:(product)=>dispatch(toggleExpandItemAttributes(product)),
     }
 }
 

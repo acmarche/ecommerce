@@ -7,13 +7,14 @@ use App\Entity\InterfaceDef\ProduitInterface;
 use App\Entity\InterfaceDef\ProduitListingInterface;
 use App\Entity\Produit\Produit;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Attribut\ProduitListingAttributRepository")
  * @UniqueEntity(fields={"produit","listingAttributs"}, message="Une liste ne peut être présente deux fois")
  */
-class ProduitListingAttribut implements ProduitListingInterface
+class ProduitListingAttribut implements ProduitListingInterface, JsonSerializable
 {
     /**
      * @ORM\Id
@@ -169,4 +170,18 @@ class ProduitListingAttribut implements ProduitListingInterface
         $this->expand = $expand;
     }
 
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return[
+            'id'=>$this->getId(),
+            'listingAttributs'=>$this->getListingAttributs()
+        ];
+    }
 }

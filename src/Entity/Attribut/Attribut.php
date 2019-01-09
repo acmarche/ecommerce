@@ -169,10 +169,10 @@ class Attribut implements AttributInterface, JsonSerializable
         return [
             'id' => $this->getId(),
             'nom' =>$this->getNom(),
+            'listingAttributId' => $this->getListingAttributs()->getId(),
             'prixHtva' =>$this->getPrixHtva(),
             'prix' => $this->getPrix(),
             'quantite' => $this->getQuantite(),
-            'listingAttributs' => $this->getListingAttributs(),
             'valeur' => $this->getValeur(),
             'prixPromoHtva' => $this->getPrixPromoHtva(),
             'prixApplique' => $this->getPrixApplique()

@@ -8,6 +8,7 @@
 
 namespace App\Checker;
 
+use App\Entity\InterfaceDef\AttributInterface;
 use App\Entity\InterfaceDef\CommandeInterface;
 use App\Entity\InterfaceDef\CommandeProduitInterface;
 use App\Entity\InterfaceDef\ProduitInterface;
@@ -73,6 +74,13 @@ class PanierChecker
 
     }
 
+    public function checkToDeleteAttribut(AttributInterface $attribut)
+    {
+
+    }
+
+
+
     /**
      * @param ProduitInterface $produit
      * @throws \Exception
@@ -127,5 +135,10 @@ class PanierChecker
 
         //refresh panier
         return $this->panierManager->getPanierEncours();
+    }
+
+    public function checkToAddAttribute($attribut)
+    {
+
     }
 }

@@ -128,8 +128,20 @@ class PanierManager extends AbstractManager
     public function removeProduit(CommandeProduitInterface $commandeProduit)
     {
         $this->panierChecker->checkToDelete($commandeProduit);
-
         $this->commandeProduitManger->removeCommandeProduit($commandeProduit);
+    }
+
+    public function addAttribut(CommandeProduitInterface $commandeProduit, AttributInterface $attribut){
+        $this->panierChecker->checkToAddAttribute($attribut);
+        $commandeProduit->addAttribut($attribut);
+        $this->flush();
+    }
+
+    public function removeAttribut(CommandeProduitInterface $commandeProduit, AttributInterface $attribut)
+    {
+        $this->panierChecker->checkToDeleteAttribut($attribut);
+        $commandeProduit->removeAttribut($attribut);
+        $this->flush();
     }
 
     /**

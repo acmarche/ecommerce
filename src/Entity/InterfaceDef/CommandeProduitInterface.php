@@ -153,5 +153,7 @@ interface CommandeProduitInterface
      */
     public function addAttribut(AttributInterface $attribut);
 
+    public function removeAttribut(AttributInterface $attribut);
+
 
 }
