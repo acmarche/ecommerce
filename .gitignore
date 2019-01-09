@@ -17,7 +17,6 @@
 ###< symfony/phpunit-bridge ###
 ###> acmarche/bundle ###
 .idea
-/clean.sh
 /*sql
 /public/media/
 # Backup entities generated with doctrine:generate:entities command
