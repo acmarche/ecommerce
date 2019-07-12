@@ -92,6 +92,9 @@
     "egulias/email-validator": {
         "version": "2.1.3"
     },
+    "facebook/webdriver": {
+        "version": "1.6.0"
+    },
     "fig/link-util": {
         "version": "1.0.0"
     },
@@ -158,6 +161,9 @@
     "markbaker/complex": {
         "version": "1.4.6"
     },
+    "markbaker/matrix": {
+        "version": "1.1.4"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },
@@ -208,6 +214,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.0"
+    },
+    "ralouphie/getallheaders": {
+        "version": "2.0.5"
     },
     "ramsey/uuid": {
         "version": "3.7.3"
@@ -265,6 +274,9 @@
             "version": "3.3",
             "ref": "9f94d3ea453cd8a3b95db7f82592d7344fe3a76a"
         }
+    },
+    "symfony/contracts": {
+        "version": "v1.0.2"
     },
     "symfony/css-selector": {
         "version": "v4.0.4"
@@ -371,6 +383,9 @@
     "symfony/orm-pack": {
         "version": "v1.0.5"
     },
+    "symfony/panther": {
+        "version": "v0.2.0"
+    },
     "symfony/phpunit-bridge": {
         "version": "3.3",
         "recipe": {
@@ -413,9 +428,6 @@
             "ref": "cda8b550123383d25827705d05a42acf6819fe4e"
         }
     },
-    "symfony/security": {
-        "version": "v4.0.4"
-    },
     "symfony/security-bundle": {
         "version": "3.3",
         "recipe": {
@@ -424,6 +436,18 @@
             "version": "3.3",
             "ref": "34eb245ce4194e7ae713558084180e2c532e7afd"
         }
+    },
+    "symfony/security-core": {
+        "version": "v4.2.2"
+    },
+    "symfony/security-csrf": {
+        "version": "v4.2.2"
+    },
+    "symfony/security-guard": {
+        "version": "v4.2.2"
+    },
+    "symfony/security-http": {
+        "version": "v4.2.2"
     },
     "symfony/serializer": {
         "version": "v4.0.4"
@@ -475,6 +499,9 @@
     },
     "symfony/var-dumper": {
         "version": "v4.0.4"
+    },
+    "symfony/var-exporter": {
+        "version": "v4.2.2"
     },
     "symfony/web-link": {
         "version": "v4.0.4"
